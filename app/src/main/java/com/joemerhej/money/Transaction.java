@@ -42,9 +42,22 @@ public class Transaction
         this.mCategory = transaction.mCategory;
     }
 
-    public Transaction(Sms sms)
+    public static Transaction from(Sms sms)
     {
-        SmsUtils.getTransactionFromSms(sms);
+        return SmsUtils.getTransactionFromSms(sms);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Transaction{" +
+                "mType=" + mType +
+                ", mAmount=" + mAmount +
+                ", mCurrency=" + mCurrency +
+                ", mDate=" + mDate +
+                ", mIssuer='" + mIssuer + '\'' +
+                ", mCategory='" + mCategory + '\'' +
+                '}';
     }
 
     public TransactionType getType()
