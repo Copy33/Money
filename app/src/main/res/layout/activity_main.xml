@@ -9,71 +9,83 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:orientation="vertical">
 
-        <Button
+
+        <android.support.design.widget.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/spending_title"/>
+
+            <android.support.design.widget.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/income_title"/>
+        </android.support.design.widget.TabLayout>
+
+        <android.support.v4.view.ViewPager
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/sync_button"
-            android:text="SYNC"
-            android:onClick="sync"/>
+            android:id="@+id/chart_view_pager">
 
+
+        </android.support.v4.view.ViewPager>
+
+
+
+
+
+        <!-- ==================== THIS IS FOR LATER ==================== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:paddingTop="200dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TOTAL: "/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone Number: "/>
+
+                <EditText
+                    android:id="@+id/phone_number_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/total_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Phone Number: "/>
+                android:text="SMS to send:"/>
 
             <EditText
-                android:id="@+id/phone_number_text_view"
-                android:layout_width="0dp"
+                android:id="@+id/sms_to_send_edit_text"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
+                android:textAllCaps="false"/>
+
+
+            <Button
+                android:id="@+id/send_sms_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="SendSms"
+                android:text="Send SMS"/>
+
         </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="SMS to send:"/>
-
-        <EditText
-            android:id="@+id/sms_to_send_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAllCaps="false"/>
-
-
-        <Button
-            android:id="@+id/send_sms_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="SendSms"
-            android:text="Send SMS"/>
-
     </LinearLayout>
-
 
 </ScrollView>

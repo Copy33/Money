@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements Observer
         // define views
         mPhoneNumberEditText = findViewById(R.id.phone_number_text_view);
         mSmsToSendEditText = findViewById(R.id.sms_to_send_edit_text);
-        mTotalTextView = findViewById(R.id.total_text_view);
 
         // auto populate phone number form shared preferences
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -68,24 +67,24 @@ public class MainActivity extends AppCompatActivity implements Observer
         SmsObservable.getInstance().addObserver(this);
 
 
-        List<Sms> ALL = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy");
-        try
-        {
-            Date fromDate = sdf.parse("25/10/2017");
-            Date toDate = sdf.parse("03/11/2017");
-            ALL = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
-        }
-        catch(ParseException e)
-        {
-            e.printStackTrace();
-        }
-
-        Account myAccount = new Account(Currency.AED);
-        for(Sms sms : ALL)
-        {
-            myAccount.applyTransaction(new Transaction(sms));
-        }
+//        List<Sms> ALL = new ArrayList<>();
+//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy");
+//        try
+//        {
+//            Date fromDate = sdf.parse("25/10/2017");
+//            Date toDate = sdf.parse("03/11/2017");
+//            ALL = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
+//        }
+//        catch(ParseException e)
+//        {
+//            e.printStackTrace();
+//        }
+//
+//        Account myAccount = new Account(Currency.AED);
+//        for(Sms sms : ALL)
+//        {
+//            myAccount.applyTransaction(new Transaction(sms));
+//        }
 
         Log.d(TAG, "asd");
     }
@@ -129,9 +128,6 @@ public class MainActivity extends AppCompatActivity implements Observer
     // CLICK LISTENERS (from xml)
     // =============================================================================================================================================================
 
-    public void sync(View view)
-    {
-    }
 
     // send sms button click listener that will send the sms provided to the number provided
     public void SendSms(View view)

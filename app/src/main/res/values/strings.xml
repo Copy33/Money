@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">Money</string>
+
     <string name="permission_alert_dialog_title">SMS READ permission</string>
     <string name="permission_dialog_message">I will request permission here and will tell you why</string>
     <string name="error_invalid_phone_number">Invalid phone number!</string>
     <string name="toast_sending_sms">Sending sms...</string>
+
+    <string name="spending_title">Spending</string>
+    <string name="income_title">Income</string>
+
 </resources>
