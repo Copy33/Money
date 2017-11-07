@@ -68,26 +68,44 @@ public class MainActivity extends AppCompatActivity implements Observer
         SmsObservable.getInstance().addObserver(this);
 
 
-        List<Sms> ALL = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy");
-        try
+        if(!hasReadSmsPermission())
         {
-            Date fromDate = sdf.parse("25/10/2017");
-            Date toDate = sdf.parse("03/11/2017");
-            ALL = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
+            // should always call showRequestPermissionsInfoAlertDialog function and not requestReadSmsPermission directly to give the app dialog first
+            showRequestPermissionsInfoAlertDialog();
         }
-        catch(ParseException e)
+        else
         {
-            e.printStackTrace();
-        }
+            // get the list of sms between 2 dates
+            List<Sms> smsList = new ArrayList<>();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy");
+            try
+            {
+                Date fromDate = sdf.parse("25/10/2017");
+                Date toDate = sdf.parse("03/11/2017");
+                smsList = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
+            }
+            catch(ParseException e)
+            {
+                e.printStackTrace();
+            }
 
-        Account myAccount = new Account(Currency.AED);
-        for(Sms sms : ALL)
-        {
-            myAccount.applyTransaction(new Transaction(sms));
-        }
+            // create an account and go through every sms, retrieve transaction, and add it to the account
+            Account myAccount = new Account(Currency.AED);
+            String str = "";
 
-        Log.d(TAG, "asd");
+            for(Sms sms : smsList)
+            {
+                Transaction transaction = Transaction.from(sms);
+                myAccount.applyTransaction(transaction);
+
+                if(transaction != null)
+                {
+                    str += Transaction.from(sms).toString() + "\n";
+                }
+            }
+
+            Log.d(TAG, str);
+        }
     }
 
     @Override
@@ -157,6 +175,17 @@ public class MainActivity extends AppCompatActivity implements Observer
     // HANDLING SMS PERMISSIONS
     // =============================================================================================================================================================
 
+    // requests sms read permission if needed (needs to check Android SDK version first)
+    private void requestReadSmsPermission()
+    {
+        if(ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.READ_SMS))
+        {
+            return;
+        }
+
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_SMS}, SMS_PERMISSION_CODE);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
     {
@@ -167,14 +196,15 @@ public class MainActivity extends AppCompatActivity implements Observer
                 // If request is cancelled, the result arrays are empty.
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
-                    checkAndUpdateUserPrefNumber();
+                    //TODO: figure out what to do here, nothing for now.
+                    //checkAndUpdateUserPrefNumber();
 
-                    SmsUtils.sendDebugSms(mPhoneNumberEditText.getText().toString(), mSmsToSendEditText.getText().toString());
-                    Toast.makeText(getApplicationContext(), R.string.toast_sending_sms, Toast.LENGTH_SHORT).show();
+                    //SmsUtils.sendDebugSms(mPhoneNumberEditText.getText().toString(), mSmsToSendEditText.getText().toString());
+                    //Toast.makeText(getApplicationContext(), R.string.toast_sending_sms, Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    //TODO: figure out what to do here.
+                    //TODO: figure out what to do here, nothing for now.
                     Toast.makeText(getApplicationContext(), "PERMISSION DENIED!", Toast.LENGTH_SHORT).show();
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
@@ -208,17 +238,6 @@ public class MainActivity extends AppCompatActivity implements Observer
 
         builder.setCancelable(false);
         builder.show();
-    }
-
-    // requests sms read permission if needed (needs to check Android SDK version first)
-    private void requestReadSmsPermission()
-    {
-        if(ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.READ_SMS))
-        {
-            return;
-        }
-
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_SMS}, SMS_PERMISSION_CODE);
     }
 
     // checks if the app has permissions to read sms
