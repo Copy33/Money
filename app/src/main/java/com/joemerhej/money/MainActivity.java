@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements Observer
     // views
     private EditText mPhoneNumberEditText;
     private EditText mSmsToSendEditText;
-    private TextView mTotalTextView;
 
     // properties
     private String mUserMobilePhone;
@@ -55,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements Observer
         // define views
         mPhoneNumberEditText = findViewById(R.id.phone_number_text_view);
         mSmsToSendEditText = findViewById(R.id.sms_to_send_edit_text);
-        mTotalTextView = findViewById(R.id.total_text_view);
 
         // auto populate phone number form shared preferences
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -68,44 +66,49 @@ public class MainActivity extends AppCompatActivity implements Observer
         SmsObservable.getInstance().addObserver(this);
 
 
-        if(!hasReadSmsPermission())
-        {
-            // should always call showRequestPermissionsInfoAlertDialog function and not requestReadSmsPermission directly to give the app dialog first
-            showRequestPermissionsInfoAlertDialog();
-        }
-        else
-        {
-            // get the list of sms between 2 dates
-            List<Sms> smsList = new ArrayList<>();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy");
-            try
-            {
-                Date fromDate = sdf.parse("25/10/2017");
-                Date toDate = sdf.parse("03/11/2017");
-                smsList = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
-            }
-            catch(ParseException e)
-            {
-                e.printStackTrace();
-            }
+//        if(!hasReadSmsPermission())
+//        {
+//            // should always call showRequestPermissionsInfoAlertDialog function and not requestReadSmsPermission directly to give the app dialog first
+//            showRequestPermissionsInfoAlertDialog();
+//        }
+//        else
+//        {
+//            // get the list of sms between 2 dates
+//            List<Sms> smsList = new ArrayList<>();
+//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy");
+//            try
+//            {
+//                Date fromDate = sdf.parse("25/10/2017");
+//                Date toDate = sdf.parse("03/11/2017");
+//                smsList = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
+//            }
+//            catch(ParseException e)
+//            {
+//                e.printStackTrace();
+//            }
+//
+//            // create an account and go through every sms, retrieve transaction, and add it to the account
+//            Account myAccount = new Account(Currency.AED);
+//            String str = "";
+//
+//            for(Sms sms : smsList)
+//            {
+//                Transaction transaction = Transaction.from(sms);
+//                myAccount.applyTransaction(transaction);
+//
+//                if(transaction != null)
+//                {
+//                    str += Transaction.from(sms).toString() + "\n";
+//                }
+//            }
+//
+//            Log.d(TAG, str);
+//        }
 
-            // create an account and go through every sms, retrieve transaction, and add it to the account
-            Account myAccount = new Account(Currency.AED);
-            String str = "";
+        Account myAccount = new Account();
+        myAccount.mock();
 
-            for(Sms sms : smsList)
-            {
-                Transaction transaction = Transaction.from(sms);
-                myAccount.applyTransaction(transaction);
-
-                if(transaction != null)
-                {
-                    str += Transaction.from(sms).toString() + "\n";
-                }
-            }
-
-            Log.d(TAG, str);
-        }
+        Log.d(TAG, "asd");
     }
 
     @Override

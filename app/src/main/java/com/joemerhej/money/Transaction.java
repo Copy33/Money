@@ -20,6 +20,8 @@ public class Transaction
     public Transaction()
     {
         mCurrency = mCurrency.AED;
+        mAmount = BigDecimal.ZERO;
+        mCategory = TransactionCategory.NONE.toString();
     }
 
     public Transaction(TransactionType mType, BigDecimal mAmount, Currency mCurrency, Date mDate, String mIssuer, String mCategory)
@@ -29,7 +31,11 @@ public class Transaction
         this.mCurrency = mCurrency;
         this.mDate = mDate;
         this.mIssuer = mIssuer;
-        this.mCategory = mCategory;
+
+        if(mCategory != null)
+            this.mCategory = mCategory;
+        else
+            this.mCategory = TransactionCategory.NONE.toString();
     }
 
     public Transaction(Transaction transaction)

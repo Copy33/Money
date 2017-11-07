@@ -14,4 +14,10 @@ public enum Currency
     {
         this.mValue = aed;
     }
+
+    @Override
+    public String toString()
+    {
+        return mValue;
+    }
 }
