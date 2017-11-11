@@ -9,34 +9,25 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.joemerhej.money.account.Account;
 import com.joemerhej.money.R;
-import com.joemerhej.money.account.Currency;
-import com.joemerhej.money.sms.Sms;
+import com.joemerhej.money.adapters.MainChartsFragmentPagerAdapter;
 import com.joemerhej.money.sms.SmsObservable;
 import com.joemerhej.money.sms.SmsUtils;
-import com.joemerhej.money.transaction.Transaction;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements Observer
 {
@@ -45,13 +36,21 @@ public class MainActivity extends AppCompatActivity implements Observer
     private static final String PREF_USER_MOBILE_PHONE = "pref_user_mobile_phone";
     private static final int SMS_PERMISSION_CODE = 0;
 
+    // =============================================================================================
+    // PROTOTYPE SECTION
+    // =============================================================================================
     // views
     private EditText mPhoneNumberEditText;
     private EditText mSmsToSendEditText;
-
     // properties
-    private String mUserMobilePhone;
+    private String mNumberToSendFrom;
     private SharedPreferences mSharedPreferences;
+    // =============================================================================================
+
+    // views
+    private ViewPager mViewPager;
+    private MainChartsFragmentPagerAdapter mPagerAdapter;
+    private TabLayout mMainChartsTabs;
 
 
     @Override
@@ -60,68 +59,78 @@ public class MainActivity extends AppCompatActivity implements Observer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // =========================================================================================
+        // PROTOTYPE SECTION
+        // =========================================================================================
         // define views
         mPhoneNumberEditText = findViewById(R.id.phone_number_text_view);
         mSmsToSendEditText = findViewById(R.id.sms_to_send_edit_text);
 
         // auto populate phone number form shared preferences
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mUserMobilePhone = mSharedPreferences.getString(PREF_USER_MOBILE_PHONE, "");
+        mNumberToSendFrom = mSharedPreferences.getString(PREF_USER_MOBILE_PHONE, "");
 
-        if(!TextUtils.isEmpty(mUserMobilePhone))
-            mPhoneNumberEditText.setText(mUserMobilePhone);
+        if(!TextUtils.isEmpty(mNumberToSendFrom))
+            mPhoneNumberEditText.setText(mNumberToSendFrom);
 
         // add this activity as an observer for our SMS observable
         SmsObservable.getInstance().addObserver(this);
+        // =========================================================================================
 
+        // define views
+        mViewPager = findViewById(R.id.main_charts_view_pager);
+        mMainChartsTabs = findViewById(R.id.main_charts_tabs);
 
-        if(!hasReadSmsPermission())
-        {
-            // should always call showRequestPermissionsInfoAlertDialog function and not requestReadSmsPermission directly to give the app dialog first
-            showRequestPermissionsInfoAlertDialog();
-        }
-        else
-        {
-            // get the list of sms between 2 dates
-            List<Sms> smsList = new ArrayList<>();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy");
-            try
-            {
-                Date fromDate = sdf.parse("25/10/2017");
-                Date toDate = sdf.parse("03/11/2017");
-                smsList = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
-            }
-            catch(ParseException e)
-            {
-                e.printStackTrace();
-            }
+        mPagerAdapter = new MainChartsFragmentPagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(mPagerAdapter);
+        mMainChartsTabs.setupWithViewPager(mViewPager);
+        mMainChartsTabs.getTabAt(0).setText(getResources().getString(R.string.spending_title));
+        mMainChartsTabs.getTabAt(1).setText(getResources().getString(R.string.income_title));
 
-            // create an account and go through every sms, retrieve transaction, and add it to the account
-            Account myAccount = new Account(Currency.AED);
-            String str = "";
-            Set<String> set = new HashSet<>();
-
-            for(Sms sms : smsList)
-            {
-                Transaction transaction = Transaction.from(sms);
-                myAccount.applyTransaction(transaction);
-
-                if(transaction != null)
-                {
-                    str += Transaction.from(sms).toString() + "\n";
-                    set.add(transaction.getIssuer());
-                }
-            }
-
-
-
-            Log.d(TAG, str);
-        }
+//        if(!hasReadSmsPermission())
+//        {
+//            // should always call showRequestPermissionsInfoAlertDialog function and not requestReadSmsPermission directly to give the app dialog first
+//            showRequestPermissionsInfoAlertDialog();
+//        }
+//        else
+//        {
+//            // get the list of sms between 2 dates
+//            List<Sms> smsList = new ArrayList<>();
+//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy");
+//            try
+//            {
+//                Date fromDate = sdf.parse("25/10/2017");
+//                Date toDate = sdf.parse("03/11/2017");
+//                smsList = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
+//            }
+//            catch(ParseException e)
+//            {
+//                e.printStackTrace();
+//            }
+//
+//            // create an account and go through every sms, retrieve transaction, and add it to the account
+//            Account myAccount = new Account(Currency.AED);
+//            Set<String> set = new HashSet<>();
+//
+//            for(Sms sms : smsList)
+//            {
+//                Transaction transaction = Transaction.from(sms);
+//                myAccount.applyTransaction(transaction);
+//
+//                if(transaction != null)
+//                {
+//                    set.add(transaction.getIssuer());
+//                }
+//            }
+//
+//
+//
+//            Log.d(TAG, "bla");
+//        }
 
 //        Account myAccount = new Account();
 //        myAccount.mock();
-
-        Log.d(TAG, "asd");
+ //       Log.d(TAG, "asd");
     }
 
     @Override
@@ -150,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements Observer
     //Checks if stored SharedPreferences value needs updating and updates it
     private void checkAndUpdateUserPrefNumber()
     {
-        if(TextUtils.isEmpty(mUserMobilePhone) && !mUserMobilePhone.equals(mPhoneNumberEditText.getText().toString()))
+        if(TextUtils.isEmpty(mNumberToSendFrom) && !mNumberToSendFrom.equals(mPhoneNumberEditText.getText().toString()))
         {
             mSharedPreferences
                     .edit()
