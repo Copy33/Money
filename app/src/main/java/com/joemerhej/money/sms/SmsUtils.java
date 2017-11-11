@@ -1,4 +1,4 @@
-package com.joemerhej.money;
+package com.joemerhej.money.sms;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -6,6 +6,12 @@ import android.net.Uri;
 import android.provider.Telephony;
 import android.telephony.SmsManager;
 import android.util.Log;
+
+import com.joemerhej.money.account.Currency;
+import com.joemerhej.money.transaction.Transaction;
+import com.joemerhej.money.transaction.TransactionCategorizer;
+import com.joemerhej.money.transaction.TransactionCategory;
+import com.joemerhej.money.transaction.TransactionType;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -22,13 +28,15 @@ public class SmsUtils
 {
     private static final String TAG = "SmsUtils";
 
-    // checks if valid phone number
-    public static boolean isValidPhoneNumber(final String phoneNumber)
     // ============================================================================================================================================================
+    // checks if valid phone number
+    // ============================================================================================================================================================
+    public static boolean isValidPhoneNumber(final String phoneNumber)
     {
         return android.util.Patterns.PHONE.matcher(phoneNumber).matches();
     }
 
+    // ============================================================================================================================================================
     // sends an Sms to the specified number with the specified sms body
     // ============================================================================================================================================================
     public static void sendDebugSms(final String number, final String smsBody)
@@ -39,6 +47,7 @@ public class SmsUtils
         smsManager.sendMultipartTextMessage(number, null, smsParts, null, null);
     }
 
+    // ============================================================================================================================================================
     // parses an sms body and creates a transaction
     // ============================================================================================================================================================
     public static Transaction getTransactionFromSms(final Sms sms)
@@ -70,10 +79,6 @@ public class SmsUtils
 
             // transaction issuer (between first "to" and first "with"
             transaction.setIssuer(message.substring(message.indexOf("to") + 2, message.indexOf("with")).trim());
-
-            // TODO: transaction category
-
-            return transaction;
         }
         else if(message.startsWith("Purchase of"))
         {
@@ -92,10 +97,6 @@ public class SmsUtils
 
             // transaction issuer (between first "at" and "Limit is {currency}"
             transaction.setIssuer(message.substring(message.indexOf("at") + 2, message.indexOf("Limit is " + transaction.getCurrency().toString())).trim());
-
-            // TODO: transaction category
-
-            return transaction;
         }
         else if(message.contains("has been deducted"))
         {
@@ -111,10 +112,6 @@ public class SmsUtils
 
             // transaction currency (between 0 and first number)
             transaction.setCurrency(Currency.valueOf(message.substring(0, message.indexOf(firstNumber)).trim()));
-
-            // TODO: transaction category
-
-            return transaction;
         }
         else if(message.contains("has been credited"))
         {
@@ -131,8 +128,7 @@ public class SmsUtils
             // transaction currency (between 0 and first number)
             transaction.setCurrency(Currency.valueOf(message.substring(0, message.indexOf(firstNumber)).trim()));
 
-            // TODO: transaction category
-
+            transaction.setCategory(TransactionCategory.INCOME.toString());
             return transaction;
         }
         else if(message.contains("has been transferred to"))
@@ -149,15 +145,20 @@ public class SmsUtils
 
             // transaction currency (between 0 and first number)
             transaction.setCurrency(Currency.valueOf(message.substring(0, message.indexOf(firstNumber)).trim()));
-
-            // TODO: transaction category
-
+            transaction.setCategory(TransactionCategory.INCOME.toString());
             return transaction;
         }
+        else
+        {
+            return null;
+        }
 
-        return null;
+        transaction.setCategory(TransactionCategorizer.getInstance().getCategoryFromString(transaction.getIssuer()));
+
+        return transaction;
     }
 
+    // ============================================================================================================================================================
     // returns a list of all sms on the device
     // ============================================================================================================================================================
     public static List<Sms> getAllSms(Context context)
@@ -190,6 +191,7 @@ public class SmsUtils
         return smsList;
     }
 
+    // ============================================================================================================================================================
     // returns a list of all sms on the device by a specific address, could be a number or a name if number doesn't exist
     // ============================================================================================================================================================
     public static List<Sms> getAllSms(Context context, final String fromAddress)
@@ -223,6 +225,7 @@ public class SmsUtils
         return smsList;
     }
 
+    // ============================================================================================================================================================
     // returns a list of all sms on the device within a certain date range (excluding toDate)
     // ============================================================================================================================================================
     public static List<Sms> getAllSms(Context context, final Date fromDate, final Date toDate)
@@ -278,6 +281,7 @@ public class SmsUtils
         return smsList;
     }
 
+    // ============================================================================================================================================================
     // returns a list of all sms on the device from a specific address received between a date range
     // ============================================================================================================================================================
     public static List<Sms> getAllSms(Context context, final String fromAddress, final Date fromDate, final Date toDate)

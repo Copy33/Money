@@ -1,4 +1,4 @@
-package com.joemerhej.money;
+package com.joemerhej.money.activities;
 
 /**
  * Created by Joe Merhej on 11/2/17.
@@ -18,16 +18,25 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.joemerhej.money.account.Account;
+import com.joemerhej.money.R;
+import com.joemerhej.money.account.Currency;
+import com.joemerhej.money.sms.Sms;
+import com.joemerhej.money.sms.SmsObservable;
+import com.joemerhej.money.sms.SmsUtils;
+import com.joemerhej.money.transaction.Transaction;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements Observer
 {
@@ -66,47 +75,51 @@ public class MainActivity extends AppCompatActivity implements Observer
         SmsObservable.getInstance().addObserver(this);
 
 
-//        if(!hasReadSmsPermission())
-//        {
-//            // should always call showRequestPermissionsInfoAlertDialog function and not requestReadSmsPermission directly to give the app dialog first
-//            showRequestPermissionsInfoAlertDialog();
-//        }
-//        else
-//        {
-//            // get the list of sms between 2 dates
-//            List<Sms> smsList = new ArrayList<>();
-//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy");
-//            try
-//            {
-//                Date fromDate = sdf.parse("25/10/2017");
-//                Date toDate = sdf.parse("03/11/2017");
-//                smsList = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
-//            }
-//            catch(ParseException e)
-//            {
-//                e.printStackTrace();
-//            }
-//
-//            // create an account and go through every sms, retrieve transaction, and add it to the account
-//            Account myAccount = new Account(Currency.AED);
-//            String str = "";
-//
-//            for(Sms sms : smsList)
-//            {
-//                Transaction transaction = Transaction.from(sms);
-//                myAccount.applyTransaction(transaction);
-//
-//                if(transaction != null)
-//                {
-//                    str += Transaction.from(sms).toString() + "\n";
-//                }
-//            }
-//
-//            Log.d(TAG, str);
-//        }
+        if(!hasReadSmsPermission())
+        {
+            // should always call showRequestPermissionsInfoAlertDialog function and not requestReadSmsPermission directly to give the app dialog first
+            showRequestPermissionsInfoAlertDialog();
+        }
+        else
+        {
+            // get the list of sms between 2 dates
+            List<Sms> smsList = new ArrayList<>();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy");
+            try
+            {
+                Date fromDate = sdf.parse("25/10/2017");
+                Date toDate = sdf.parse("03/11/2017");
+                smsList = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
+            }
+            catch(ParseException e)
+            {
+                e.printStackTrace();
+            }
 
-        Account myAccount = new Account();
-        myAccount.mock();
+            // create an account and go through every sms, retrieve transaction, and add it to the account
+            Account myAccount = new Account(Currency.AED);
+            String str = "";
+            Set<String> set = new HashSet<>();
+
+            for(Sms sms : smsList)
+            {
+                Transaction transaction = Transaction.from(sms);
+                myAccount.applyTransaction(transaction);
+
+                if(transaction != null)
+                {
+                    str += Transaction.from(sms).toString() + "\n";
+                    set.add(transaction.getIssuer());
+                }
+            }
+
+
+
+            Log.d(TAG, str);
+        }
+
+//        Account myAccount = new Account();
+//        myAccount.mock();
 
         Log.d(TAG, "asd");
     }

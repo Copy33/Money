@@ -1,4 +1,4 @@
-package com.joemerhej.money;
+package com.joemerhej.money.sms;
 
 import java.util.Observable;
 
@@ -20,7 +20,7 @@ public class SmsObservable extends Observable
         return mInstance;
     }
 
-    // methods
+    // methods to call
     public void updateValue(Object data)
     {
         synchronized(this)

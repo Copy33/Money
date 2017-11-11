@@ -1,4 +1,4 @@
-package com.joemerhej.money;
+package com.joemerhej.money.sms;
 
 import java.util.Date;
 

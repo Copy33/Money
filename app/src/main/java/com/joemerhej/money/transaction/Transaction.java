@@ -1,4 +1,8 @@
-package com.joemerhej.money;
+package com.joemerhej.money.transaction;
+
+import com.joemerhej.money.account.Currency;
+import com.joemerhej.money.sms.Sms;
+import com.joemerhej.money.sms.SmsUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -86,7 +90,7 @@ public class Transaction
         mAmount = amount;
     }
 
-    public com.joemerhej.money.Currency getCurrency()
+    public Currency getCurrency()
     {
         return mCurrency;
     }

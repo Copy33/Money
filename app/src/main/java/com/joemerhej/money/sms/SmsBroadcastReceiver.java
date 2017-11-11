@@ -1,4 +1,4 @@
-package com.joemerhej.money;
+package com.joemerhej.money.sms;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

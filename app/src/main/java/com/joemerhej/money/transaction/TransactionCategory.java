@@ -1,4 +1,4 @@
-package com.joemerhej.money;
+package com.joemerhej.money.transaction;
 
 /**
  * Created by Joe Merhej on 11/7/17.
@@ -6,7 +6,7 @@ package com.joemerhej.money;
 
 public enum TransactionCategory
 {
-    PAYCHECK("Paycheck"),
+    INCOME("Income"),
     BILLS("Bills"),
     GROCERIES("Groceries"),
     FOOD("Food"),
@@ -15,9 +15,9 @@ public enum TransactionCategory
     SPORTS("Sports"),
     SHOPPING("Shopping"),
     HEALTH("Health"),
-    GIFTS("Gifts"),
     TRAVEL("Travel"),
     PETS("Pets"),
+    CARE("Personal Care"),
     OTHER("Other"),
     NONE("None");
 

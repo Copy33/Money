@@ -1,4 +1,4 @@
-package com.joemerhej.money;
+package com.joemerhej.money.account;
 
 /**
  * Created by Joe Merhej on 11/3/17.
