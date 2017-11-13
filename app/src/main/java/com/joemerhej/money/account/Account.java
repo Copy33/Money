@@ -117,14 +117,14 @@ public class Account
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(80.00), Currency.AED, sdf.parse("29/10/2017 18:12:23"), "NATIONAL TAXI, DUBAI. Avl Cr.", "Transport"));
             applyTransaction(new Transaction(TransactionType.DEPOSIT, new BigDecimal(19176), Currency.AED, sdf.parse("29/10/2017 15:03:20"), null, "Income"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(19176), Currency.AED, sdf.parse("29/10/2017 15:02:55"), null, "None"));
-            applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(18400), Currency.AED, sdf.parse("29/10/2017 15:01:23"), null, "None"));
+            applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(1840), Currency.AED, sdf.parse("29/10/2017 15:01:23"), null, "None"));
             applyTransaction(new Transaction(TransactionType.DEPOSIT, new BigDecimal(30000), Currency.AED, sdf.parse("29/10/2017 14:54:45"), null, "Income"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(28.00), Currency.AED, sdf.parse("29/10/2017 10:44:21"), "CAREEM NETWORKS FZ LLC", "Transport"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(30.00), Currency.AED, sdf.parse("29/10/2017 10:00:52"), "www.turnlunchon.com, INTERNET. Avl Cr.", "Food"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(18.00), Currency.AED, sdf.parse("28/10/2017 21:38:03"), "CAREEM NETWORKS FZ LLC", "Transport"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(396.30), Currency.AED, sdf.parse("28/10/2017 21:27:03"), "CARREFOUR BR OF -472603, DUBAI. Avl Cr.", "Groceries"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(22.00), Currency.AED, sdf.parse("28/10/2017 20:29:23"), "CAREEM NETWORKS FZ LLC", "Transport"));
-            applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(99.00), Currency.AED, sdf.parse("28/10/2017 13:00:21"), "ZOMATO ORDER, DUBAI. Avl Cr.", null));
+            applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(99.00), Currency.AED, sdf.parse("28/10/2017 13:00:21"), "ZOMATO ORDER, DUBAI. Avl Cr.", "Food"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(65.00), Currency.AED, sdf.parse("28/10/2017 02:31:02"), "CAREEM NETWORKS FZ LLC", "Transport"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(29.00), Currency.AED, sdf.parse("27/10/2017 16:23:02"), "CAREEM NETWORKS FZ LLC", "Transport"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(40.00), Currency.AED, sdf.parse("27/10/2017 15:01:04"), "LE MERIDIEN MINA SEYAHI, DUBAI. Avl Cr.", "Food"));

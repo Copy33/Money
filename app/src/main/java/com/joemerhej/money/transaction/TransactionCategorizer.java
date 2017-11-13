@@ -43,8 +43,6 @@ public class TransactionCategorizer
         mCategoryMap.put("dewa", "Bills");
         mCategoryMap.put("lootah", "Bills");
         mCategoryMap.put("etisalat", "Bills");
-        mCategoryMap.put("government", "Bills");
-        mCategoryMap.put("belhasa", "Bills");
 
         mCategoryMap.put("carrefour", "Groceries");
         mCategoryMap.put("spinneys", "Groceries");
@@ -67,7 +65,6 @@ public class TransactionCategorizer
         mCategoryMap.put("talabat", "Food");
         mCategoryMap.put("bakemart", "Food");
         mCategoryMap.put("mcdonalds", "Food");
-        mCategoryMap.put("nutrition", "Food");
         mCategoryMap.put("zaatar", "Food");
         mCategoryMap.put("albahr", "Food");
         mCategoryMap.put("salt", "Food");
@@ -75,11 +72,12 @@ public class TransactionCategorizer
         mCategoryMap.put("cake", "Food");
         mCategoryMap.put("blacktap", "Food");
         mCategoryMap.put("meridien", "Food");
+        mCategoryMap.put("pai", "Food");
 
-        mCategoryMap.put("club", "Going out");
-        mCategoryMap.put("drink", "Going out");
-        mCategoryMap.put("beverage", "Going out");
-        mCategoryMap.put("jetty", "Going out");
+        mCategoryMap.put("club", "Going Out");
+        mCategoryMap.put("drink", "Going Out");
+        mCategoryMap.put("beverage", "Going Out");
+        mCategoryMap.put("jetty", "Going Out");
 
         mCategoryMap.put("taxi", "Transport");
         mCategoryMap.put("uber", "Transport");
@@ -108,6 +106,7 @@ public class TransactionCategorizer
         mCategoryMap.put("hospital", "Health");
         mCategoryMap.put("pharmacy", "Health");
         mCategoryMap.put("life", "Health");
+        mCategoryMap.put("nutrition", "Health");
 
         mCategoryMap.put("emirates", "Travel");
         mCategoryMap.put("mea", "Travel");
@@ -122,6 +121,9 @@ public class TransactionCategorizer
         mCategoryMap.put("cat", "Pets");
 
         mCategoryMap.put("chaps", "Care");
+
+        mCategoryMap.put("government", "Other");
+        mCategoryMap.put("belhasa", "Other");
     }
 
     public String getCategoryFromString(String text)

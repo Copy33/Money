@@ -25,16 +25,23 @@ import android.widget.Toast;
 import com.github.mikephil.charting.data.PieEntry;
 import com.joemerhej.money.R;
 import com.joemerhej.money.account.Account;
+import com.joemerhej.money.account.Currency;
 import com.joemerhej.money.adapters.MainChartsFragmentPagerAdapter;
+import com.joemerhej.money.sms.Sms;
 import com.joemerhej.money.sms.SmsObservable;
 import com.joemerhej.money.sms.SmsUtils;
 import com.joemerhej.money.transaction.Transaction;
 import com.joemerhej.money.transaction.TransactionCategory;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements Observer
 {
@@ -88,8 +95,11 @@ public class MainActivity extends AppCompatActivity implements Observer
         // PROTOTYPE SECTION
         // =========================================================================================
         // define views
-        mPhoneNumberEditText = findViewById(R.id.phone_number_text_view);
+        mPhoneNumberEditText = findViewById(R.id.phone_number_edit_text);
         mSmsToSendEditText = findViewById(R.id.sms_to_send_edit_text);
+
+        mPhoneNumberEditText.setVisibility(View.GONE);
+        mSmsToSendEditText.setVisibility(View.GONE);
 
         // auto populate phone number form shared preferences
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -107,69 +117,106 @@ public class MainActivity extends AppCompatActivity implements Observer
         mMainChartsTabs = findViewById(R.id.main_charts_tabs);
 
 
-//        if(!hasReadSmsPermission())
-//        {
-//            // should always call showRequestPermissionsInfoAlertDialog function and not requestReadSmsPermission directly to give the app dialog first
-//            showRequestPermissionsInfoAlertDialog();
-//        }
-//        else
-//        {
-//            // get the list of sms between 2 dates
-//            List<Sms> smsList = new ArrayList<>();
-//            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy");
-//            try
-//            {
+        if(!hasReadSmsPermission())
+        {
+            // should always call showRequestPermissionsInfoAlertDialog function and not requestReadSmsPermission directly to give the app dialog first
+            showRequestPermissionsInfoAlertDialog();
+        }
+        else
+        {
+            // get the list of sms between 2 dates
+            List<Sms> smsList = new ArrayList<>();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy");
+            try
+            {
 //                Date fromDate = sdf.parse("25/10/2017");
 //                Date toDate = sdf.parse("03/11/2017");
-//                smsList = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
-//            }
-//            catch(ParseException e)
-//            {
-//                e.printStackTrace();
-//            }
-//
-//            // create an account and go through every sms, retrieve transaction, and add it to the account
-//            Account myAccount = new Account(Currency.AED);
-//            Set<String> set = new HashSet<>();
-//
-//            for(Sms sms : smsList)
-//            {
-//                Transaction transaction = Transaction.from(sms);
-//                myAccount.applyTransaction(transaction);
-//
-//                if(transaction != null)
-//                {
-//                    set.add(transaction.getIssuer());
-//                }
-//            }
-//
-//
-//
-//            Log.d(TAG, "bla");
-//        }
 
-        // setup main account
-        mMainAccount.mock();
-        Log.d(TAG, "asd");
+                Date fromDate = sdf.parse("28/09/2017");
+                Date toDate = sdf.parse("29/10/2017");
+                smsList = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
+            }
+            catch(ParseException e)
+            {
+                e.printStackTrace();
+            }
+
+            // go through every sms, retrieve transaction, and add it to the account
+            Set<String> set = new HashSet<>();
+
+            for(Sms sms : smsList)
+            {
+                Transaction transaction = Transaction.from(sms);
+                mMainAccount.applyTransaction(transaction);
+
+                if(transaction != null)
+                {
+                    set.add(transaction.getIssuer());
+                }
+            }
+
+
+
+            Log.d(TAG, "bla");
+        }
+
+//        // setup main account
+//        mMainAccount.mock();
+//        Log.d(TAG, "asd");
         
         // fill in the transactions by category
         populateAccounts(mMainAccount.getTransactions());
 
         // set up pie chart
-        ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
-        entries.add(new PieEntry(mAccountNone.getBalance().abs().floatValue(), TransactionCategory.NONE.toString()));
-        entries.add(new PieEntry(mAccountBills.getBalance().abs().floatValue(), TransactionCategory.BILLS.toString()));
-        entries.add(new PieEntry(mAccountGroceries.getBalance().abs().floatValue(), TransactionCategory.GROCERIES.toString()));
-        entries.add(new PieEntry(mAccountFood.getBalance().abs().floatValue(), TransactionCategory.FOOD.toString()));
-        entries.add(new PieEntry(mAccountGoingOut.getBalance().abs().floatValue(), TransactionCategory.GOING_OUT.toString()));
-        entries.add(new PieEntry(mAccountTransport.getBalance().abs().floatValue(), TransactionCategory.TRANSPORT.toString()));
-        entries.add(new PieEntry(mAccountSports.getBalance().abs().floatValue(), TransactionCategory.SPORTS.toString()));
-        entries.add(new PieEntry(mAccountShopping.getBalance().abs().floatValue(), TransactionCategory.SHOPPING.toString()));
-        entries.add(new PieEntry(mAccountHealth.getBalance().abs().floatValue(), TransactionCategory.HEALTH.toString()));
-        entries.add(new PieEntry(mAccountTravel.getBalance().abs().floatValue(), TransactionCategory.TRAVEL.toString()));
-        entries.add(new PieEntry(mAccountPets.getBalance().abs().floatValue(), TransactionCategory.PETS.toString()));
-        entries.add(new PieEntry(mAccountPersonalCare.getBalance().abs().floatValue(), TransactionCategory.CARE.toString()));
-        entries.add(new PieEntry(mAccountOther.getBalance().abs().floatValue(), TransactionCategory.OTHER.toString()));
+        ArrayList<PieEntry> entries = new ArrayList<>();
+
+        float labelNumber = mAccountBills.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+            entries.add(new PieEntry(labelNumber, TransactionCategory.BILLS.toString()));
+
+        labelNumber = mAccountGroceries.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+            entries.add(new PieEntry(labelNumber, TransactionCategory.GROCERIES.toString()));
+
+        labelNumber = mAccountFood.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+            entries.add(new PieEntry(labelNumber, TransactionCategory.FOOD.toString()));
+
+        labelNumber = mAccountGoingOut.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+            entries.add(new PieEntry(labelNumber, TransactionCategory.GOING_OUT.toString()));
+
+        labelNumber = mAccountTransport.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+            entries.add(new PieEntry(labelNumber, TransactionCategory.TRANSPORT.toString()));
+
+        labelNumber = mAccountSports.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+            entries.add(new PieEntry(labelNumber, TransactionCategory.SPORTS.toString()));
+
+        labelNumber = mAccountShopping.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+            entries.add(new PieEntry(labelNumber, TransactionCategory.SHOPPING.toString()));
+
+        labelNumber = mAccountHealth.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+            entries.add(new PieEntry(labelNumber, TransactionCategory.HEALTH.toString()));
+
+        labelNumber = mAccountTravel.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+            entries.add(new PieEntry(labelNumber, TransactionCategory.TRAVEL.toString()));
+
+        labelNumber = mAccountPets.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+            entries.add(new PieEntry(labelNumber, TransactionCategory.PETS.toString()));
+
+        labelNumber = mAccountPersonalCare.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+            entries.add(new PieEntry(labelNumber, TransactionCategory.CARE.toString()));
+
+        labelNumber = mAccountOther.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+            entries.add(new PieEntry(labelNumber, TransactionCategory.OTHER.toString()));
 
         mPagerAdapter = new MainChartsFragmentPagerAdapter(getSupportFragmentManager(), entries);
         mViewPager.setAdapter(mPagerAdapter);
