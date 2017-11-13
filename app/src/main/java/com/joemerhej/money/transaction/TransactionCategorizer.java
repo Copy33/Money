@@ -132,7 +132,7 @@ public class TransactionCategorizer
         // lower case it
         text = text.toLowerCase();
 
-        // split on alphanumericals
+        // split on alphanumerical characters
         String[] splits = text.split("\\W+");
 
         for(String s : splits)

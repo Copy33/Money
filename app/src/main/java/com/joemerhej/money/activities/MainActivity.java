@@ -17,15 +17,22 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.data.PieEntry;
 import com.joemerhej.money.R;
+import com.joemerhej.money.account.Account;
 import com.joemerhej.money.adapters.MainChartsFragmentPagerAdapter;
 import com.joemerhej.money.sms.SmsObservable;
 import com.joemerhej.money.sms.SmsUtils;
+import com.joemerhej.money.transaction.Transaction;
+import com.joemerhej.money.transaction.TransactionCategory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -52,6 +59,24 @@ public class MainActivity extends AppCompatActivity implements Observer
     private MainChartsFragmentPagerAdapter mPagerAdapter;
     private TabLayout mMainChartsTabs;
 
+    // data
+    private Account mMainAccount = new Account();
+
+    private Account mAccountIncome = new Account();
+    private Account mAccountBills = new Account();
+    private Account mAccountGroceries = new Account();
+    private Account mAccountFood = new Account();
+    private Account mAccountGoingOut = new Account();
+    private Account mAccountTransport = new Account();
+    private Account mAccountSports = new Account();
+    private Account mAccountShopping = new Account();
+    private Account mAccountHealth = new Account();
+    private Account mAccountTravel = new Account();
+    private Account mAccountPets = new Account();
+    private Account mAccountPersonalCare = new Account();
+    private Account mAccountOther = new Account();
+    private Account mAccountNone = new Account();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -77,15 +102,10 @@ public class MainActivity extends AppCompatActivity implements Observer
         SmsObservable.getInstance().addObserver(this);
         // =========================================================================================
 
-        // define views
+        // set up views
         mViewPager = findViewById(R.id.main_charts_view_pager);
         mMainChartsTabs = findViewById(R.id.main_charts_tabs);
 
-        mPagerAdapter = new MainChartsFragmentPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mPagerAdapter);
-        mMainChartsTabs.setupWithViewPager(mViewPager);
-        mMainChartsTabs.getTabAt(0).setText(getResources().getString(R.string.spending_title));
-        mMainChartsTabs.getTabAt(1).setText(getResources().getString(R.string.income_title));
 
 //        if(!hasReadSmsPermission())
 //        {
@@ -128,9 +148,115 @@ public class MainActivity extends AppCompatActivity implements Observer
 //            Log.d(TAG, "bla");
 //        }
 
-//        Account myAccount = new Account();
-//        myAccount.mock();
- //       Log.d(TAG, "asd");
+        // setup main account
+        mMainAccount.mock();
+        Log.d(TAG, "asd");
+        
+        // fill in the transactions by category
+        populateAccounts(mMainAccount.getTransactions());
+
+        // set up pie chart
+        ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
+        entries.add(new PieEntry(mAccountNone.getBalance().abs().floatValue(), TransactionCategory.NONE.toString()));
+        entries.add(new PieEntry(mAccountBills.getBalance().abs().floatValue(), TransactionCategory.BILLS.toString()));
+        entries.add(new PieEntry(mAccountGroceries.getBalance().abs().floatValue(), TransactionCategory.GROCERIES.toString()));
+        entries.add(new PieEntry(mAccountFood.getBalance().abs().floatValue(), TransactionCategory.FOOD.toString()));
+        entries.add(new PieEntry(mAccountGoingOut.getBalance().abs().floatValue(), TransactionCategory.GOING_OUT.toString()));
+        entries.add(new PieEntry(mAccountTransport.getBalance().abs().floatValue(), TransactionCategory.TRANSPORT.toString()));
+        entries.add(new PieEntry(mAccountSports.getBalance().abs().floatValue(), TransactionCategory.SPORTS.toString()));
+        entries.add(new PieEntry(mAccountShopping.getBalance().abs().floatValue(), TransactionCategory.SHOPPING.toString()));
+        entries.add(new PieEntry(mAccountHealth.getBalance().abs().floatValue(), TransactionCategory.HEALTH.toString()));
+        entries.add(new PieEntry(mAccountTravel.getBalance().abs().floatValue(), TransactionCategory.TRAVEL.toString()));
+        entries.add(new PieEntry(mAccountPets.getBalance().abs().floatValue(), TransactionCategory.PETS.toString()));
+        entries.add(new PieEntry(mAccountPersonalCare.getBalance().abs().floatValue(), TransactionCategory.CARE.toString()));
+        entries.add(new PieEntry(mAccountOther.getBalance().abs().floatValue(), TransactionCategory.OTHER.toString()));
+
+        mPagerAdapter = new MainChartsFragmentPagerAdapter(getSupportFragmentManager(), entries);
+        mViewPager.setAdapter(mPagerAdapter);
+        mMainChartsTabs.setupWithViewPager(mViewPager);
+        mMainChartsTabs.getTabAt(0).setText(getResources().getString(R.string.spending_title));
+        mMainChartsTabs.getTabAt(1).setText(getResources().getString(R.string.income_title));
+
+
+
+
+    }
+
+    private void populateAccounts(List<Transaction> allTransactions)
+    {
+        for(Transaction t : allTransactions)
+        {
+            if(t.getCategory().compareTo(TransactionCategory.NONE.toString()) == 0)
+            {
+                mAccountNone.applyTransaction(t);
+                continue;
+            }
+            if(t.getCategory().compareTo(TransactionCategory.INCOME.toString()) == 0)
+            {
+                mAccountIncome.applyTransaction(t);
+                continue;
+            }
+            if(t.getCategory().compareTo(TransactionCategory.BILLS.toString()) == 0)
+            {
+                mAccountBills.applyTransaction(t);
+                continue;
+            }
+            if(t.getCategory().compareTo(TransactionCategory.GROCERIES.toString()) == 0)
+            {
+                mAccountGroceries.applyTransaction(t);
+                continue;
+            }
+            if(t.getCategory().compareTo(TransactionCategory.FOOD.toString()) == 0)
+            {
+                mAccountFood.applyTransaction(t);
+                continue;
+            }
+            if(t.getCategory().compareTo(TransactionCategory.GOING_OUT.toString()) == 0)
+            {
+                mAccountGoingOut.applyTransaction(t);
+                continue;
+            }
+            if(t.getCategory().compareTo(TransactionCategory.TRANSPORT.toString()) == 0)
+            {
+                mAccountTransport.applyTransaction(t);
+                continue;
+            }
+            if(t.getCategory().compareTo(TransactionCategory.SPORTS.toString()) == 0)
+            {
+                mAccountSports.applyTransaction(t);
+                continue;
+            }
+            if(t.getCategory().compareTo(TransactionCategory.SHOPPING.toString()) == 0)
+            {
+                mAccountShopping.applyTransaction(t);
+                continue;
+            }
+            if(t.getCategory().compareTo(TransactionCategory.HEALTH.toString()) == 0)
+            {
+                mAccountHealth.applyTransaction(t);
+                continue;
+            }
+            if(t.getCategory().compareTo(TransactionCategory.TRAVEL.toString()) == 0)
+            {
+                mAccountTravel.applyTransaction(t);
+                continue;
+            }
+            if(t.getCategory().compareTo(TransactionCategory.PETS.toString()) == 0)
+            {
+                mAccountPets.applyTransaction(t);
+                continue;
+            }
+            if(t.getCategory().compareTo(TransactionCategory.CARE.toString()) == 0)
+            {
+                mAccountPersonalCare.applyTransaction(t);
+                continue;
+            }
+            if(t.getCategory().compareTo(TransactionCategory.OTHER.toString()) == 0)
+            {
+                mAccountOther.applyTransaction(t);
+                continue;
+            }
+        }
     }
 
     @Override
@@ -171,10 +297,6 @@ public class MainActivity extends AppCompatActivity implements Observer
     // =============================================================================================================================================================
     // CLICK LISTENERS (from xml)
     // =============================================================================================================================================================
-
-    public void sync(View view)
-    {
-    }
 
     // send sms button click listener that will send the sms provided to the number provided
     public void SendSms(View view)

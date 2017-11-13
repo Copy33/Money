@@ -6,6 +6,7 @@ package com.joemerhej.money.transaction;
 
 public enum TransactionCategory
 {
+    NONE("None"),
     INCOME("Income"),
     BILLS("Bills"),
     GROCERIES("Groceries"),
@@ -18,8 +19,7 @@ public enum TransactionCategory
     TRAVEL("Travel"),
     PETS("Pets"),
     CARE("Personal Care"),
-    OTHER("Other"),
-    NONE("None");
+    OTHER("Other");
 
     private final String mValue;
 

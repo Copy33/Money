@@ -5,9 +5,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.joemerhej.money.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Joe Merhej on 11/12/17.
@@ -15,19 +21,23 @@ import com.joemerhej.money.R;
 
 public class MainChartSpendingFragment extends Fragment
 {
-    private static final String SECTION_NUMBER = "section_number";
+    private static final String ENTRIES_KEY = "entries";
+
+    // views
+    private PieChart mSpendingChart;
+
 
     // every fragment requires a default constructor and a newInstance method
     public MainChartSpendingFragment()
     {
     }
 
-    public static MainChartSpendingFragment newInstance(int sectionNumber)
+    public static MainChartSpendingFragment newInstance(ArrayList<PieEntry> entries)
     {
         MainChartSpendingFragment fragment = new MainChartSpendingFragment();
 
         Bundle args = new Bundle();
-        args.putInt(SECTION_NUMBER, sectionNumber);
+        args.putParcelableArrayList(ENTRIES_KEY, entries);
         fragment.setArguments(args);
 
         return fragment;
@@ -36,11 +46,47 @@ public class MainChartSpendingFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View rootView = inflater.inflate(R.layout.fragment_income_chart, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_spending_chart, container, false);
 
-        TextView textView = rootView.findViewById(R.id.section_label);
-        textView.setText(getString(R.string.section_format, getArguments().getInt(SECTION_NUMBER)));
+        // set up views
+        mSpendingChart = rootView.findViewById(R.id.spending_chart);
+
+        List<PieEntry> entries = getArguments().getParcelableArrayList("entries");
+
+        PieDataSet set = new PieDataSet(entries, "Categories");
+        PieData data = new PieData(set);
+
+        mSpendingChart.setData(data);
+        mSpendingChart.setUsePercentValues(true);
+        mSpendingChart.invalidate();
 
         return rootView;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
