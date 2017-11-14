@@ -56,7 +56,7 @@ public class MainChartSpendingFragment extends Fragment
         mSpendingChart = rootView.findViewById(R.id.spending_chart);
 
         mSpendingChart.getDescription().setEnabled(false);
-        mSpendingChart.setExtraOffsets(15, 20, 15, 20);
+        mSpendingChart.setExtraOffsets(25, 30, 25, 30);
         mSpendingChart.setDragDecelerationFrictionCoef(0.5f);
         mSpendingChart.setRotationEnabled(true);
         mSpendingChart.setTransparentCircleColor(Color.rgb(105, 105, 105));
@@ -76,8 +76,8 @@ public class MainChartSpendingFragment extends Fragment
         dataSet.setValueLinePart1OffsetPercentage(100.f);
         dataSet.setValueTextColor(Color.BLACK);
         dataSet.setValueLineColor(Color.BLACK);
-        dataSet.setValueLinePart1Length(0.7f);
-        dataSet.setValueLinePart2Length(0.3f);
+        dataSet.setValueLinePart1Length(0.8f);
+        dataSet.setValueLinePart2Length(0.4f);
         dataSet.setHighlightEnabled(true);
 
         mSpendingChart.getLegend().setEnabled(false);

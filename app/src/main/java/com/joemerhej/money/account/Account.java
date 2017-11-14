@@ -87,6 +87,8 @@ public class Account
 
     public void mock()
     {
+        clear();
+
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy HH:mm:ss");
         try
         {

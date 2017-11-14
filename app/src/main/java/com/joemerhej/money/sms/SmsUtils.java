@@ -68,7 +68,7 @@ public class SmsUtils
             transaction.setType(TransactionType.WITHDRAWAL);
 
             // transaction amount (first number in the message)
-            Pattern p = Pattern.compile("\\d*\\.\\d+");
+            Pattern p = Pattern.compile("\\d*([.,]?\\d+)");
             Matcher m = p.matcher(message);
             m.find();
             String firstNumber = m.group();
@@ -86,7 +86,7 @@ public class SmsUtils
             transaction.setType(TransactionType.WITHDRAWAL);
 
             // transaction amount (first number in the message)
-            Pattern p = Pattern.compile("\\d*\\.\\d+");
+            Pattern p = Pattern.compile("\\d*([.,]?\\d+)");
             Matcher m = p.matcher(message);
             m.find();
             String firstNumber = m.group();

@@ -129,11 +129,8 @@ public class MainActivity extends AppCompatActivity implements Observer
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy");
             try
             {
-//                Date fromDate = sdf.parse("25/10/2017");
-//                Date toDate = sdf.parse("03/11/2017");
-
-                Date fromDate = sdf.parse("28/09/2017");
-                Date toDate = sdf.parse("29/10/2017");
+                Date fromDate = sdf.parse("25/10/2016");
+                Date toDate = sdf.parse("03/11/2018");
                 smsList = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
             }
             catch(ParseException e)
@@ -162,7 +159,6 @@ public class MainActivity extends AppCompatActivity implements Observer
 
 //        // setup main account
 //        mMainAccount.mock();
-//        Log.d(TAG, "asd");
         
         // fill in the transactions by category
         populateAccounts(mMainAccount.getTransactions());
@@ -223,9 +219,6 @@ public class MainActivity extends AppCompatActivity implements Observer
         mMainChartsTabs.setupWithViewPager(mViewPager);
         mMainChartsTabs.getTabAt(0).setText(getResources().getString(R.string.spending_title));
         mMainChartsTabs.getTabAt(1).setText(getResources().getString(R.string.income_title));
-
-
-
 
     }
 

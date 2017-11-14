@@ -39,91 +39,91 @@ public class TransactionCategorizer
 
     public void initWithMockMap()
     {
-        mCategoryMap.put("du", "Bills");
-        mCategoryMap.put("dewa", "Bills");
-        mCategoryMap.put("lootah", "Bills");
-        mCategoryMap.put("etisalat", "Bills");
+        mCategoryMap.put("du", TransactionCategory.BILLS.toString());
+        mCategoryMap.put("dewa", TransactionCategory.BILLS.toString());
+        mCategoryMap.put("lootah", TransactionCategory.BILLS.toString());
+        mCategoryMap.put("etisalat", TransactionCategory.BILLS.toString());
 
-        mCategoryMap.put("carrefour", "Groceries");
-        mCategoryMap.put("spinneys", "Groceries");
-        mCategoryMap.put("lifco", "Groceries");
-        mCategoryMap.put("waitrose", "Groceries");
-        mCategoryMap.put("lulu", "Groceries");
-        mCategoryMap.put("aswaaq", "Groceries");
-        mCategoryMap.put("market", "Groceries");
-        mCategoryMap.put("supermarket", "Groceries");
-        mCategoryMap.put("minimarket", "Groceries");
-        mCategoryMap.put("hypermarket", "Groceries");
+        mCategoryMap.put("carrefour", TransactionCategory.GROCERIES.toString());
+        mCategoryMap.put("spinneys", TransactionCategory.GROCERIES.toString());
+        mCategoryMap.put("lifco", TransactionCategory.GROCERIES.toString());
+        mCategoryMap.put("waitrose", TransactionCategory.GROCERIES.toString());
+        mCategoryMap.put("lulu", TransactionCategory.GROCERIES.toString());
+        mCategoryMap.put("aswaaq", TransactionCategory.GROCERIES.toString());
+        mCategoryMap.put("market", TransactionCategory.GROCERIES.toString());
+        mCategoryMap.put("supermarket", TransactionCategory.GROCERIES.toString());
+        mCategoryMap.put("minimarket", TransactionCategory.GROCERIES.toString());
+        mCategoryMap.put("hypermarket", TransactionCategory.GROCERIES.toString());
 
-        mCategoryMap.put("food", "Food");
-        mCategoryMap.put("restaurant", "Food");
-        mCategoryMap.put("eat", "Food");
-        mCategoryMap.put("eats", "Food");
-        mCategoryMap.put("turnlunchon", "Food");
-        mCategoryMap.put("zomato", "Food");
-        mCategoryMap.put("deliveroo", "Food");
-        mCategoryMap.put("talabat", "Food");
-        mCategoryMap.put("bakemart", "Food");
-        mCategoryMap.put("mcdonalds", "Food");
-        mCategoryMap.put("zaatar", "Food");
-        mCategoryMap.put("albahr", "Food");
-        mCategoryMap.put("salt", "Food");
-        mCategoryMap.put("cheese", "Food");
-        mCategoryMap.put("cake", "Food");
-        mCategoryMap.put("blacktap", "Food");
-        mCategoryMap.put("meridien", "Food");
-        mCategoryMap.put("pai", "Food");
+        mCategoryMap.put(TransactionCategory.FOOD.toString(), TransactionCategory.FOOD.toString());
+        mCategoryMap.put("restaurant", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("eat", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("eats", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("turnlunchon", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("zomato", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("deliveroo", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("talabat", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("bakemart", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("mcdonalds", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("zaatar", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("albahr", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("salt", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("cheese", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("cake", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("blacktap", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("meridien", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("pai", TransactionCategory.FOOD.toString());
 
-        mCategoryMap.put("club", "Going Out");
-        mCategoryMap.put("drink", "Going Out");
-        mCategoryMap.put("beverage", "Going Out");
-        mCategoryMap.put("jetty", "Going Out");
+        mCategoryMap.put("club", TransactionCategory.GOING_OUT.toString());
+        mCategoryMap.put("drink", TransactionCategory.GOING_OUT.toString());
+        mCategoryMap.put("beverage", TransactionCategory.GOING_OUT.toString());
+        mCategoryMap.put("jetty", TransactionCategory.GOING_OUT.toString());
 
-        mCategoryMap.put("taxi", "Transport");
-        mCategoryMap.put("uber", "Transport");
-        mCategoryMap.put("careem", "Transport");
-        mCategoryMap.put("metro", "Transport");
-        mCategoryMap.put("rta", "Transport");
+        mCategoryMap.put("taxi", TransactionCategory.TRANSPORT.toString());
+        mCategoryMap.put("uber", TransactionCategory.TRANSPORT.toString());
+        mCategoryMap.put("careem", TransactionCategory.TRANSPORT.toString());
+        mCategoryMap.put("metro", TransactionCategory.TRANSPORT.toString());
+        mCategoryMap.put("rta", TransactionCategory.TRANSPORT.toString());
 
-        mCategoryMap.put("sport", "Sports");
-        mCategoryMap.put("sports", "Sports");
-        mCategoryMap.put("gym", "Sports");
-        mCategoryMap.put("fitness", "Sports");
-        mCategoryMap.put("football", "Sports");
+        mCategoryMap.put("sport", TransactionCategory.SPORTS.toString());
+        mCategoryMap.put(TransactionCategory.SPORTS.toString(), TransactionCategory.SPORTS.toString());
+        mCategoryMap.put("gym", TransactionCategory.SPORTS.toString());
+        mCategoryMap.put("fitness", TransactionCategory.SPORTS.toString());
+        mCategoryMap.put("football", TransactionCategory.SPORTS.toString());
 
-        mCategoryMap.put("shop", "Shopping");
-        mCategoryMap.put("shops", "Shopping");
-        mCategoryMap.put("shopping", "Shopping");
-        mCategoryMap.put("mall", "Shopping");
-        mCategoryMap.put("apparel", "Shopping");
-        mCategoryMap.put("cloth", "Shopping");
-        mCategoryMap.put("clothes", "Shopping");
-        mCategoryMap.put("furniture", "Shopping");
-        mCategoryMap.put("souq", "Shopping");
-        mCategoryMap.put("noon", "Shopping");
+        mCategoryMap.put("shop", TransactionCategory.SHOPPING.toString());
+        mCategoryMap.put("shops", TransactionCategory.SHOPPING.toString());
+        mCategoryMap.put("shopping", TransactionCategory.SHOPPING.toString());
+        mCategoryMap.put("mall", TransactionCategory.SHOPPING.toString());
+        mCategoryMap.put("apparel", TransactionCategory.SHOPPING.toString());
+        mCategoryMap.put("cloth", TransactionCategory.SHOPPING.toString());
+        mCategoryMap.put("clothes", TransactionCategory.SHOPPING.toString());
+        mCategoryMap.put("furniture", TransactionCategory.SHOPPING.toString());
+        mCategoryMap.put("souq", TransactionCategory.SHOPPING.toString());
+        mCategoryMap.put("noon", TransactionCategory.SHOPPING.toString());
 
-        mCategoryMap.put("health", "Health");
-        mCategoryMap.put("hospital", "Health");
-        mCategoryMap.put("pharmacy", "Health");
-        mCategoryMap.put("life", "Health");
-        mCategoryMap.put("nutrition", "Health");
+        mCategoryMap.put("health", TransactionCategory.HEALTH.toString());
+        mCategoryMap.put("hospital", TransactionCategory.HEALTH.toString());
+        mCategoryMap.put("pharmacy", TransactionCategory.HEALTH.toString());
+        mCategoryMap.put("life", TransactionCategory.HEALTH.toString());
+        mCategoryMap.put("nutrition", TransactionCategory.HEALTH.toString());
 
-        mCategoryMap.put("emirates", "Travel");
-        mCategoryMap.put("mea", "Travel");
-        mCategoryMap.put("fly", "Travel");
-        mCategoryMap.put("travel", "Travel");
-        mCategoryMap.put("airline", "Travel");
+        mCategoryMap.put("emirates", TransactionCategory.TRAVEL.toString());
+        mCategoryMap.put("mea", TransactionCategory.TRAVEL.toString());
+        mCategoryMap.put("fly", TransactionCategory.TRAVEL.toString());
+        mCategoryMap.put("travel", TransactionCategory.TRAVEL.toString());
+        mCategoryMap.put("airline", TransactionCategory.TRAVEL.toString());
 
-        mCategoryMap.put("pet", "Pets");
-        mCategoryMap.put("pets", "Pets");
-        mCategoryMap.put("veterinary", "Pets");
-        mCategoryMap.put("dog", "Pets");
-        mCategoryMap.put("cat", "Pets");
+        mCategoryMap.put("pet", TransactionCategory.PETS.toString());
+        mCategoryMap.put("pets", TransactionCategory.PETS.toString());
+        mCategoryMap.put("veterinary", TransactionCategory.PETS.toString());
+        mCategoryMap.put("dog", TransactionCategory.PETS.toString());
+        mCategoryMap.put("cat", TransactionCategory.PETS.toString());
 
-        mCategoryMap.put("chaps", "Care");
+        mCategoryMap.put("chaps", TransactionCategory.CARE.toString());
 
-        mCategoryMap.put("government", "Other");
-        mCategoryMap.put("belhasa", "Other");
+        mCategoryMap.put("government", TransactionCategory.OTHER.toString());
+        mCategoryMap.put("belhasa", TransactionCategory.OTHER.toString());
     }
 
     public String getCategoryFromString(String text)
