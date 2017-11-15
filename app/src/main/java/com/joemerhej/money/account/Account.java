@@ -1,5 +1,7 @@
 package com.joemerhej.money.account;
 
+import android.util.Log;
+
 import com.joemerhej.money.transaction.Transaction;
 import com.joemerhej.money.transaction.TransactionType;
 
@@ -15,6 +17,8 @@ import java.util.List;
 
 public class Account
 {
+    private static final String TAG = "Account";
+
     private List<Transaction> mTransactions;
     private BigDecimal mBalance;
     private Currency mCurrency;
@@ -51,7 +55,6 @@ public class Account
         if(transaction == null)
             return;
 
-
         if(transaction.getType() == TransactionType.WITHDRAWAL)
         {
             mBalance = mBalance.subtract(transaction.getAmount());
@@ -69,14 +72,38 @@ public class Account
         if(transaction == null)
             return;
 
-        Transaction newTransaction = new Transaction(transaction);
+        if(!mTransactions.contains(transaction))
+            return;
+
+        mTransactions.remove(transaction);
 
         if(transaction.getType() == TransactionType.DEPOSIT)
-            newTransaction.setType(TransactionType.WITHDRAWAL);
+            mBalance = mBalance.add(transaction.getAmount());
         else if(transaction.getType() == TransactionType.WITHDRAWAL)
-            newTransaction.setType(TransactionType.DEPOSIT);
+            mBalance = mBalance.subtract(transaction.getAmount());
 
-        applyTransaction(newTransaction);
+    }
+
+    public void removeTransactions(List<Transaction> transactions)
+    {
+        if(transactions.isEmpty())
+            return;
+
+        if(!transactions.containsAll(transactions))
+        {
+            Log.d(TAG, "SKIP removing transactions from account - not all transactions are present");
+            return;
+        }
+
+        mTransactions.removeAll(transactions);
+
+        for(Transaction t : transactions)
+        {
+            if(t.getType() == TransactionType.DEPOSIT)
+                mBalance = mBalance.subtract(t.getAmount());
+            else if(t.getType() == TransactionType.WITHDRAWAL)
+                mBalance = mBalance.add(t.getAmount());
+        }
     }
 
     public void clear()
@@ -115,12 +142,12 @@ public class Account
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(84.29), Currency.AED, sdf.parse("30/10/2017 15:22:07"), "Lootah BCGAs LLC, Dubai. Avl Cr.", "Bills"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(28.00), Currency.AED, sdf.parse("30/10/2017 10:20:16"), "CAREEM NETWORKS FZ LLC", "Transport"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(32.00), Currency.AED, sdf.parse("30/10/2017 09:49:53"), "www.turnlunchon.com, INTERNET. Avl Cr.", "Food"));
-            applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(1040), Currency.AED, sdf.parse("29/10/2017 19:17:25"), null, "None"));
+            applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(1040), Currency.AED, sdf.parse("29/10/2017 19:17:25"), null, "Transfer Out"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(80.00), Currency.AED, sdf.parse("29/10/2017 18:12:23"), "NATIONAL TAXI, DUBAI. Avl Cr.", "Transport"));
-            applyTransaction(new Transaction(TransactionType.DEPOSIT, new BigDecimal(19176), Currency.AED, sdf.parse("29/10/2017 15:03:20"), null, "Income"));
-            applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(19176), Currency.AED, sdf.parse("29/10/2017 15:02:55"), null, "None"));
-            applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(1840), Currency.AED, sdf.parse("29/10/2017 15:01:23"), null, "None"));
-            applyTransaction(new Transaction(TransactionType.DEPOSIT, new BigDecimal(30000), Currency.AED, sdf.parse("29/10/2017 14:54:45"), null, "Income"));
+            applyTransaction(new Transaction(TransactionType.DEPOSIT, new BigDecimal(19176), Currency.AED, sdf.parse("29/10/2017 15:03:20"), null, "Salary"));
+            applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(19176), Currency.AED, sdf.parse("29/10/2017 15:02:55"), null, "Transfer Out"));
+            applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(1840), Currency.AED, sdf.parse("29/10/2017 15:01:23"), null, "Transfer Out"));
+            applyTransaction(new Transaction(TransactionType.DEPOSIT, new BigDecimal(30000), Currency.AED, sdf.parse("29/10/2017 14:54:45"), null, "Salary"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(28.00), Currency.AED, sdf.parse("29/10/2017 10:44:21"), "CAREEM NETWORKS FZ LLC", "Transport"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(30.00), Currency.AED, sdf.parse("29/10/2017 10:00:52"), "www.turnlunchon.com, INTERNET. Avl Cr.", "Food"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(18.00), Currency.AED, sdf.parse("28/10/2017 21:38:03"), "CAREEM NETWORKS FZ LLC", "Transport"));
@@ -138,10 +165,12 @@ public class Account
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(31.00), Currency.AED, sdf.parse("26/10/2017 13:36:06"), "BAKEMART PLUS   -739803, DUBAI. Avl Cr.", "Food"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(29.00), Currency.AED, sdf.parse("26/10/2017 10:44:12"), "CAREEM NETWORKS FZ LLC", "Transport"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(34.00), Currency.AED, sdf.parse("25/10/2017 20:47:14"), "CAREEM NETWORKS FZ LLC", "Transport"));
-            applyTransaction(new Transaction(TransactionType.DEPOSIT, new BigDecimal(2202), Currency.AED, sdf.parse("25/10/2017 20:45:42"), null, "Income"));
+            applyTransaction(new Transaction(TransactionType.DEPOSIT, new BigDecimal(2202), Currency.AED, sdf.parse("25/10/2017 20:45:42"), null, "Transfer In"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(27.00), Currency.AED, sdf.parse("25/10/2017 17:59:53"), "CAREEM NETWORKS FZ LLC", "Transport"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(34.00), Currency.AED, sdf.parse("25/10/2017 14:36:14"), "ZOMATO ORDER, DUBAI. Avl Cr.", "Food"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(27.00), Currency.AED, sdf.parse("25/10/2017 10:36:42"), "CAREEM NETWORKS FZ LLC", "Transport"));
+            applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(33.00), Currency.AED, sdf.parse("25/10/2017 10:32:42"), "AWESOME PLACE", "None"));
+            applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(103.00), Currency.AED, sdf.parse("25/10/2017 10:31:42"), "NEW PLACE", "None"));
         }
         catch(ParseException e)
         {
@@ -165,7 +194,6 @@ public class Account
     {
         return mCurrency;
     }
-
 }
 
 

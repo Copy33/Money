@@ -13,6 +13,14 @@
         android:layout_margin="10dp"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/account_balance_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="1,324 AED"
+            android:textSize="20sp"/>
+
 
         <android.support.design.widget.TabLayout
             android:id="@+id/main_charts_tabs"

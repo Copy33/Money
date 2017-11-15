@@ -20,12 +20,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.data.PieEntry;
 import com.joemerhej.money.R;
 import com.joemerhej.money.account.Account;
-import com.joemerhej.money.account.Currency;
 import com.joemerhej.money.adapters.MainChartsFragmentPagerAdapter;
 import com.joemerhej.money.sms.Sms;
 import com.joemerhej.money.sms.SmsObservable;
@@ -33,12 +33,14 @@ import com.joemerhej.money.sms.SmsUtils;
 import com.joemerhej.money.transaction.Transaction;
 import com.joemerhej.money.transaction.TransactionCategory;
 
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
@@ -62,18 +64,29 @@ public class MainActivity extends AppCompatActivity implements Observer
     // =============================================================================================
 
     // views
+    private TextView mAccountBalanceTextView;
     private ViewPager mViewPager;
     private MainChartsFragmentPagerAdapter mPagerAdapter;
     private TabLayout mMainChartsTabs;
 
+    private ArrayList<PieEntry> mSpendingEntries = new ArrayList<>();
+    private ArrayList<Integer> mSpendingColors = new ArrayList<>();
+    private ArrayList<PieEntry> mIncomeEntries = new ArrayList<>();
+    private ArrayList<Integer> mIncomeColors = new ArrayList<>();
+
     // data
     private Account mMainAccount = new Account();
 
-    private Account mAccountIncome = new Account();
+    private Account mAccountSalary = new Account();
+    private Account mAccountTransferIn = new Account();
+    private Account mAccountCash = new Account();
+
+    private Account mAccountTransferOut = new Account();
+    private Account mAccountRent = new Account();
     private Account mAccountBills = new Account();
     private Account mAccountGroceries = new Account();
     private Account mAccountFood = new Account();
-    private Account mAccountGoingOut = new Account();
+    private Account mAccountEntertainment = new Account();
     private Account mAccountTransport = new Account();
     private Account mAccountSports = new Account();
     private Account mAccountShopping = new Account();
@@ -113,10 +126,12 @@ public class MainActivity extends AppCompatActivity implements Observer
         // =========================================================================================
 
         // set up views
+        mAccountBalanceTextView = findViewById(R.id.account_balance_text_view);
         mViewPager = findViewById(R.id.main_charts_view_pager);
         mMainChartsTabs = findViewById(R.id.main_charts_tabs);
 
 
+        // ask for permission to access sms
         if(!hasReadSmsPermission())
         {
             // should always call showRequestPermissionsInfoAlertDialog function and not requestReadSmsPermission directly to give the app dialog first
@@ -152,69 +167,26 @@ public class MainActivity extends AppCompatActivity implements Observer
                 }
             }
 
-
-
             Log.d(TAG, "bla");
         }
 
-//        // setup main account
-//        mMainAccount.mock();
-        
+        // mock main account
+        //mMainAccount.mock();
+
+        // set up main account balance
+        mAccountBalanceTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(mMainAccount.getBalance().intValue()) + " " + mMainAccount.getCurrency().toString());
+
         // fill in the transactions by category
-        populateAccounts(mMainAccount.getTransactions());
+        populateAccounts();
 
-        // set up pie chart
-        ArrayList<PieEntry> entries = new ArrayList<>();
+        // match transfers to eliminate transfers within account
+        matchTransfers();
 
-        float labelNumber = mAccountBills.getBalance().abs().floatValue();
-        if(Float.compare(labelNumber, 0.0f) != 0)
-            entries.add(new PieEntry(labelNumber, TransactionCategory.BILLS.toString()));
+        // set up pie charts
+        setupSpendingChart();
+        setupIncomeChart();
 
-        labelNumber = mAccountGroceries.getBalance().abs().floatValue();
-        if(Float.compare(labelNumber, 0.0f) != 0)
-            entries.add(new PieEntry(labelNumber, TransactionCategory.GROCERIES.toString()));
-
-        labelNumber = mAccountFood.getBalance().abs().floatValue();
-        if(Float.compare(labelNumber, 0.0f) != 0)
-            entries.add(new PieEntry(labelNumber, TransactionCategory.FOOD.toString()));
-
-        labelNumber = mAccountGoingOut.getBalance().abs().floatValue();
-        if(Float.compare(labelNumber, 0.0f) != 0)
-            entries.add(new PieEntry(labelNumber, TransactionCategory.GOING_OUT.toString()));
-
-        labelNumber = mAccountTransport.getBalance().abs().floatValue();
-        if(Float.compare(labelNumber, 0.0f) != 0)
-            entries.add(new PieEntry(labelNumber, TransactionCategory.TRANSPORT.toString()));
-
-        labelNumber = mAccountSports.getBalance().abs().floatValue();
-        if(Float.compare(labelNumber, 0.0f) != 0)
-            entries.add(new PieEntry(labelNumber, TransactionCategory.SPORTS.toString()));
-
-        labelNumber = mAccountShopping.getBalance().abs().floatValue();
-        if(Float.compare(labelNumber, 0.0f) != 0)
-            entries.add(new PieEntry(labelNumber, TransactionCategory.SHOPPING.toString()));
-
-        labelNumber = mAccountHealth.getBalance().abs().floatValue();
-        if(Float.compare(labelNumber, 0.0f) != 0)
-            entries.add(new PieEntry(labelNumber, TransactionCategory.HEALTH.toString()));
-
-        labelNumber = mAccountTravel.getBalance().abs().floatValue();
-        if(Float.compare(labelNumber, 0.0f) != 0)
-            entries.add(new PieEntry(labelNumber, TransactionCategory.TRAVEL.toString()));
-
-        labelNumber = mAccountPets.getBalance().abs().floatValue();
-        if(Float.compare(labelNumber, 0.0f) != 0)
-            entries.add(new PieEntry(labelNumber, TransactionCategory.PETS.toString()));
-
-        labelNumber = mAccountPersonalCare.getBalance().abs().floatValue();
-        if(Float.compare(labelNumber, 0.0f) != 0)
-            entries.add(new PieEntry(labelNumber, TransactionCategory.CARE.toString()));
-
-        labelNumber = mAccountOther.getBalance().abs().floatValue();
-        if(Float.compare(labelNumber, 0.0f) != 0)
-            entries.add(new PieEntry(labelNumber, TransactionCategory.OTHER.toString()));
-
-        mPagerAdapter = new MainChartsFragmentPagerAdapter(getSupportFragmentManager(), entries);
+        mPagerAdapter = new MainChartsFragmentPagerAdapter(getSupportFragmentManager(), mSpendingEntries, mSpendingColors, mIncomeEntries, mIncomeColors);
         mViewPager.setAdapter(mPagerAdapter);
         mMainChartsTabs.setupWithViewPager(mViewPager);
         mMainChartsTabs.getTabAt(0).setText(getResources().getString(R.string.spending_title));
@@ -222,18 +194,38 @@ public class MainActivity extends AppCompatActivity implements Observer
 
     }
 
-    private void populateAccounts(List<Transaction> allTransactions)
+    private void populateAccounts()
     {
-        for(Transaction t : allTransactions)
+        for(Transaction t : mMainAccount.getTransactions())
         {
             if(t.getCategory().compareTo(TransactionCategory.NONE.toString()) == 0)
             {
                 mAccountNone.applyTransaction(t);
                 continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.INCOME.toString()) == 0)
+            if(t.getCategory().compareTo(TransactionCategory.SALARY.toString()) == 0)
             {
-                mAccountIncome.applyTransaction(t);
+                mAccountSalary.applyTransaction(t);
+                continue;
+            }
+            if(t.getCategory().compareTo(TransactionCategory.TRANSFER_IN.toString()) == 0)
+            {
+                mAccountTransferIn.applyTransaction(t);
+                continue;
+            }
+            if(t.getCategory().compareTo(TransactionCategory.CASH.toString()) == 0)
+            {
+                mAccountCash.applyTransaction(t);
+                continue;
+            }
+            if(t.getCategory().compareTo(TransactionCategory.TRANSFER_OUT.toString()) == 0)
+            {
+                mAccountTransferOut.applyTransaction(t);
+                continue;
+            }
+            if(t.getCategory().compareTo(TransactionCategory.RENT.toString()) == 0)
+            {
+                mAccountRent.applyTransaction(t);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.BILLS.toString()) == 0)
@@ -251,9 +243,9 @@ public class MainActivity extends AppCompatActivity implements Observer
                 mAccountFood.applyTransaction(t);
                 continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.GOING_OUT.toString()) == 0)
+            if(t.getCategory().compareTo(TransactionCategory.ENTERTAINMENT.toString()) == 0)
             {
-                mAccountGoingOut.applyTransaction(t);
+                mAccountEntertainment.applyTransaction(t);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.TRANSPORT.toString()) == 0)
@@ -296,6 +288,175 @@ public class MainActivity extends AppCompatActivity implements Observer
                 mAccountOther.applyTransaction(t);
                 continue;
             }
+        }
+    }
+
+    void matchTransfers()
+    {
+        Account smallerListAccount = new Account();
+        Account largerListAccount = new Account();
+
+        List<Transaction> toRemoveFromSmallerAccount = new ArrayList<>();
+        List<Transaction> toRemoveFromLargerAccount = new ArrayList<>();
+
+        if(mAccountTransferOut.getTransactions().size() < mAccountTransferIn.getTransactions().size())
+        {
+            smallerListAccount = mAccountTransferOut;
+            largerListAccount = mAccountTransferIn;
+        }
+        else
+        {
+            largerListAccount = mAccountTransferOut;
+            smallerListAccount = mAccountTransferIn;
+        }
+
+        for(Transaction ts : smallerListAccount.getTransactions())
+        {
+            for(Transaction tl : largerListAccount.getTransactions())
+            {
+                if(ts.negates(tl))
+                {
+                    toRemoveFromSmallerAccount.add(ts);
+                    toRemoveFromLargerAccount.add(tl);
+                    Log.d(TAG, "Found a match! - Transaction with amount: " + ts.getAmount().toString() + " matches transaction with amount " + tl.getAmount().toString());
+                    break;
+                }
+            }
+        }
+
+        smallerListAccount.removeTransactions(toRemoveFromSmallerAccount);
+        largerListAccount.removeTransactions(toRemoveFromLargerAccount);
+    }
+
+    private void setupSpendingChart()
+    {
+        float labelNumber = mAccountNone.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mSpendingEntries.add(new PieEntry(labelNumber, TransactionCategory.NONE.toString()));
+            mSpendingColors.add(ContextCompat.getColor(this, R.color.black));
+        }
+
+        labelNumber = mAccountTransferOut.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mSpendingEntries.add(new PieEntry(labelNumber, TransactionCategory.TRANSFER_OUT.toString()));
+            mSpendingColors.add(ContextCompat.getColor(this, R.color.blue_transfer));
+        }
+
+        labelNumber = mAccountBills.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mSpendingEntries.add(new PieEntry(labelNumber, TransactionCategory.BILLS.toString()));
+            mSpendingColors.add(ContextCompat.getColor(this, R.color.red));
+        }
+
+        labelNumber = mAccountRent.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mSpendingEntries.add(new PieEntry(labelNumber, TransactionCategory.RENT.toString()));
+            mSpendingColors.add(ContextCompat.getColor(this, R.color.blue));
+        }
+
+        labelNumber = mAccountFood.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mSpendingEntries.add(new PieEntry(labelNumber, TransactionCategory.FOOD.toString()));
+            mSpendingColors.add(ContextCompat.getColor(this, R.color.green));
+        }
+
+        labelNumber = mAccountEntertainment.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mSpendingEntries.add(new PieEntry(labelNumber, TransactionCategory.ENTERTAINMENT.toString()));
+            mSpendingColors.add(ContextCompat.getColor(this, R.color.pink));
+        }
+
+        labelNumber = mAccountTransport.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mSpendingEntries.add(new PieEntry(labelNumber, TransactionCategory.TRANSPORT.toString()));
+            mSpendingColors.add(ContextCompat.getColor(this, R.color.yellow));
+        }
+
+        labelNumber = mAccountGroceries.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mSpendingEntries.add(new PieEntry(labelNumber, TransactionCategory.GROCERIES.toString()));
+            mSpendingColors.add(ContextCompat.getColor(this, R.color.turquoise));
+        }
+
+        labelNumber = mAccountSports.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mSpendingEntries.add(new PieEntry(labelNumber, TransactionCategory.SPORTS.toString()));
+            mSpendingColors.add(ContextCompat.getColor(this, R.color.purple));
+        }
+
+        labelNumber = mAccountShopping.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mSpendingEntries.add(new PieEntry(labelNumber, TransactionCategory.SHOPPING.toString()));
+            mSpendingColors.add(ContextCompat.getColor(this, R.color.orange));
+        }
+
+        labelNumber = mAccountHealth.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mSpendingEntries.add(new PieEntry(labelNumber, TransactionCategory.HEALTH.toString()));
+            mSpendingColors.add(ContextCompat.getColor(this, R.color.navy));
+        }
+
+        labelNumber = mAccountTravel.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mSpendingEntries.add(new PieEntry(labelNumber, TransactionCategory.TRAVEL.toString()));
+            mSpendingColors.add(ContextCompat.getColor(this, R.color.brown));
+        }
+
+        labelNumber = mAccountPets.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mSpendingEntries.add(new PieEntry(labelNumber, TransactionCategory.PETS.toString()));
+            mSpendingColors.add(ContextCompat.getColor(this, R.color.grey));
+        }
+
+        labelNumber = mAccountPersonalCare.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mSpendingEntries.add(new PieEntry(labelNumber, TransactionCategory.CARE.toString()));
+            mSpendingColors.add(ContextCompat.getColor(this, R.color.lime));
+        }
+
+        labelNumber = mAccountOther.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mSpendingEntries.add(new PieEntry(labelNumber, TransactionCategory.OTHER.toString()));
+            mSpendingColors.add(ContextCompat.getColor(this, R.color.silver));
+        }
+    }
+
+    private void setupIncomeChart()
+    {
+        float labelNumber = mAccountSalary.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mIncomeEntries.add(new PieEntry(labelNumber, TransactionCategory.SALARY.toString()));
+            mIncomeColors.add(ContextCompat.getColor(this, R.color.green_salary));
+        }
+
+        labelNumber = mAccountTransferIn.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mIncomeEntries.add(new PieEntry(labelNumber, TransactionCategory.TRANSFER_IN.toString()));
+            mIncomeColors.add(ContextCompat.getColor(this, R.color.green_transfer));
+        }
+
+        labelNumber = mAccountCash.getBalance().abs().floatValue();
+        if(Float.compare(labelNumber, 0.0f) != 0)
+        {
+            mIncomeEntries.add(new PieEntry(labelNumber, TransactionCategory.CASH.toString()));
+            mIncomeColors.add(ContextCompat.getColor(this, R.color.green_cash));
         }
     }
 

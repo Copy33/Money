@@ -7,18 +7,24 @@ package com.joemerhej.money.transaction;
 public enum TransactionCategory
 {
     NONE("None"),
-    INCOME("Income"),
-    BILLS("Bills"),
-    GROCERIES("Groceries"),
-    FOOD("Food"),
-    GOING_OUT("Going Out"),
+
+    SALARY("Salary"),
+    TRANSFER_IN("Transfer In"),
+    CASH("Cash"),
+
+    TRANSFER_OUT("Transfer Out"),
+    RENT("Rent"),
     TRANSPORT("Transport"),
-    SPORTS("Sports"),
-    SHOPPING("Shopping"),
-    HEALTH("Health"),
+    ENTERTAINMENT("Entertainment"),
+    FOOD("Food"),
+    BILLS("Bills"),
     TRAVEL("Travel"),
+    SHOPPING("Shopping"),
+    GROCERIES("Groceries"),
+    CARE("Care"),
+    SPORTS("Sports"),
+    HEALTH("Health"),
     PETS("Pets"),
-    CARE("Personal Care"),
     OTHER("Other");
 
     private final String mValue;

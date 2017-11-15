@@ -16,13 +16,21 @@ import java.util.ArrayList;
 
 public class MainChartsFragmentPagerAdapter extends FragmentPagerAdapter
 {
-    ArrayList<PieEntry> mEntries = new ArrayList<>();
+    private ArrayList<PieEntry> mSpendingEntries = new ArrayList<>();
+    private ArrayList<Integer> mSpendingColors = new ArrayList<>();
+    private ArrayList<PieEntry> mIncomeEntries = new ArrayList<>();
+    private ArrayList<Integer> mIncomeColors = new ArrayList<>();
 
 
-    public MainChartsFragmentPagerAdapter(FragmentManager fm, ArrayList<PieEntry> entries)
+
+    public MainChartsFragmentPagerAdapter(FragmentManager fm, ArrayList<PieEntry> spendingEntries, ArrayList<Integer> spendingColors,
+                                          ArrayList<PieEntry> incomeEntries, ArrayList<Integer> incomeColors)
     {
         super(fm);
-        mEntries = entries;
+        mSpendingEntries = spendingEntries;
+        mSpendingColors = spendingColors;
+        mIncomeEntries = incomeEntries;
+        mIncomeColors = incomeColors;
     }
 
     @Override
@@ -31,9 +39,9 @@ public class MainChartsFragmentPagerAdapter extends FragmentPagerAdapter
         switch(position)
         {
             case 0:
-                return MainChartSpendingFragment.newInstance(mEntries);
+                return MainChartSpendingFragment.newInstance(mSpendingEntries, mSpendingColors);
             case 1:
-                return MainChartIncomeFragment.newInstance(1);
+                return MainChartIncomeFragment.newInstance(mIncomeEntries, mIncomeColors);
             default:
                 return null;
         }

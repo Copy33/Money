@@ -55,7 +55,7 @@ public class TransactionCategorizer
         mCategoryMap.put("minimarket", TransactionCategory.GROCERIES.toString());
         mCategoryMap.put("hypermarket", TransactionCategory.GROCERIES.toString());
 
-        mCategoryMap.put(TransactionCategory.FOOD.toString(), TransactionCategory.FOOD.toString());
+        mCategoryMap.put("food", TransactionCategory.FOOD.toString());
         mCategoryMap.put("restaurant", TransactionCategory.FOOD.toString());
         mCategoryMap.put("eat", TransactionCategory.FOOD.toString());
         mCategoryMap.put("eats", TransactionCategory.FOOD.toString());
@@ -73,11 +73,14 @@ public class TransactionCategorizer
         mCategoryMap.put("blacktap", TransactionCategory.FOOD.toString());
         mCategoryMap.put("meridien", TransactionCategory.FOOD.toString());
         mCategoryMap.put("pai", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("pizza", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("burger", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("pasta", TransactionCategory.FOOD.toString());
 
-        mCategoryMap.put("club", TransactionCategory.GOING_OUT.toString());
-        mCategoryMap.put("drink", TransactionCategory.GOING_OUT.toString());
-        mCategoryMap.put("beverage", TransactionCategory.GOING_OUT.toString());
-        mCategoryMap.put("jetty", TransactionCategory.GOING_OUT.toString());
+        mCategoryMap.put("club", TransactionCategory.ENTERTAINMENT.toString());
+        mCategoryMap.put("drink", TransactionCategory.ENTERTAINMENT.toString());
+        mCategoryMap.put("beverage", TransactionCategory.ENTERTAINMENT.toString());
+        mCategoryMap.put("jetty", TransactionCategory.ENTERTAINMENT.toString());
 
         mCategoryMap.put("taxi", TransactionCategory.TRANSPORT.toString());
         mCategoryMap.put("uber", TransactionCategory.TRANSPORT.toString());
@@ -86,7 +89,7 @@ public class TransactionCategorizer
         mCategoryMap.put("rta", TransactionCategory.TRANSPORT.toString());
 
         mCategoryMap.put("sport", TransactionCategory.SPORTS.toString());
-        mCategoryMap.put(TransactionCategory.SPORTS.toString(), TransactionCategory.SPORTS.toString());
+        mCategoryMap.put("sports", TransactionCategory.SPORTS.toString());
         mCategoryMap.put("gym", TransactionCategory.SPORTS.toString());
         mCategoryMap.put("fitness", TransactionCategory.SPORTS.toString());
         mCategoryMap.put("football", TransactionCategory.SPORTS.toString());

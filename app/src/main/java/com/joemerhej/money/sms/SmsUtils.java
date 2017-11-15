@@ -70,15 +70,23 @@ public class SmsUtils
             // transaction amount (first number in the message)
             Pattern p = Pattern.compile("\\d*([.,]?\\d+)");
             Matcher m = p.matcher(message);
-            m.find();
-            String firstNumber = m.group();
-            transaction.setAmount(new BigDecimal(firstNumber.replaceAll(",", "")));
 
-            // transaction currency (between first "of" and first number)
-            transaction.setCurrency(Currency.valueOf(message.substring(message.indexOf("of") + 2, message.indexOf(firstNumber)).trim()));
+            if(m.find())
+            {
+                String firstNumber = m.group();
+                transaction.setAmount(new BigDecimal(firstNumber.replaceAll(",", "")));
 
-            // transaction issuer (between first "to" and first "with"
-            transaction.setIssuer(message.substring(message.indexOf("to") + 2, message.indexOf("with")).trim());
+                // transaction currency (between first "of" and first number)
+                transaction.setCurrency(Currency.valueOf(message.substring(message.indexOf("of") + 2, message.indexOf(firstNumber)).trim()));
+
+                // transaction issuer (between first "to" and first "with"
+                transaction.setIssuer(message.substring(message.indexOf("to") + 2, message.indexOf("with")).trim());
+
+                // set category using categorizer
+                transaction.setCategory(TransactionCategorizer.getInstance().getCategoryFromString(transaction.getIssuer()));
+
+                return transaction;
+            }
         }
         else if(message.startsWith("Purchase of"))
         {
@@ -88,15 +96,23 @@ public class SmsUtils
             // transaction amount (first number in the message)
             Pattern p = Pattern.compile("\\d*([.,]?\\d+)");
             Matcher m = p.matcher(message);
-            m.find();
-            String firstNumber = m.group();
-            transaction.setAmount(new BigDecimal(firstNumber.replaceAll(",", "")));
 
-            // transaction currency (between first "of" and first number)
-            transaction.setCurrency(Currency.valueOf(message.substring(message.indexOf("of") + 2, message.indexOf(firstNumber)).trim()));
+            if(m.find())
+            {
+                String firstNumber = m.group();
+                transaction.setAmount(new BigDecimal(firstNumber.replaceAll(",", "")));
 
-            // transaction issuer (between first "at" and "Limit is {currency}"
-            transaction.setIssuer(message.substring(message.indexOf("at") + 2, message.indexOf("Limit is " + transaction.getCurrency().toString())).trim());
+                // transaction currency (between first "of" and first number)
+                transaction.setCurrency(Currency.valueOf(message.substring(message.indexOf("of") + 2, message.indexOf(firstNumber)).trim()));
+
+                // transaction issuer (between first "at" and "Limit is {currency}"
+                transaction.setIssuer(message.substring(message.indexOf("at") + 2, message.indexOf("Limit is " + transaction.getCurrency().toString())).trim());
+
+                // set category using categorizer
+                transaction.setCategory(TransactionCategorizer.getInstance().getCategoryFromString(transaction.getIssuer()));
+
+                return transaction;
+            }
         }
         else if(message.contains("has been deducted"))
         {
@@ -106,12 +122,20 @@ public class SmsUtils
             // transaction amount (first number in the message)
             Pattern p = Pattern.compile("\\d*([.,]?\\d+)");
             Matcher m = p.matcher(message);
-            m.find();
-            String firstNumber = m.group();
-            transaction.setAmount(new BigDecimal(firstNumber.replaceAll(",", "")));
 
-            // transaction currency (between 0 and first number)
-            transaction.setCurrency(Currency.valueOf(message.substring(0, message.indexOf(firstNumber)).trim()));
+            if (m.find())
+            {
+                String firstNumber = m.group();
+                transaction.setAmount(new BigDecimal(firstNumber.replaceAll(",", "")));
+
+                // transaction currency (between 0 and first number)
+                transaction.setCurrency(Currency.valueOf(message.substring(0, message.indexOf(firstNumber)).trim()));
+
+                // category transfer out
+                transaction.setCategory(TransactionCategory.TRANSFER_OUT.toString());
+
+                return transaction;
+            }
         }
         else if(message.contains("has been credited"))
         {
@@ -121,15 +145,19 @@ public class SmsUtils
             // transaction amount (first number in the message)
             Pattern p = Pattern.compile("\\d*([.,]?\\d+)");
             Matcher m = p.matcher(message);
-            m.find();
-            String firstNumber = m.group();
-            transaction.setAmount(new BigDecimal(firstNumber.replaceAll(",", "")));
 
-            // transaction currency (between 0 and first number)
-            transaction.setCurrency(Currency.valueOf(message.substring(0, message.indexOf(firstNumber)).trim()));
+            if(m.find())
+            {
+                String firstNumber = m.group();
+                transaction.setAmount(new BigDecimal(firstNumber.replaceAll(",", "")));
 
-            transaction.setCategory(TransactionCategory.INCOME.toString());
-            return transaction;
+                // transaction currency (between 0 and first number)
+                transaction.setCurrency(Currency.valueOf(message.substring(0, message.indexOf(firstNumber)).trim()));
+
+                transaction.setCategory(TransactionCategory.SALARY.toString());
+
+                return transaction;
+            }
         }
         else if(message.contains("has been transferred to"))
         {
@@ -139,23 +167,23 @@ public class SmsUtils
             // transaction amount (first number in the message)
             Pattern p = Pattern.compile("\\d*([.,]?\\d+)");
             Matcher m = p.matcher(message);
-            m.find();
-            String firstNumber = m.group();
-            transaction.setAmount(new BigDecimal(firstNumber.replaceAll(",", "")));
 
-            // transaction currency (between 0 and first number)
-            transaction.setCurrency(Currency.valueOf(message.substring(0, message.indexOf(firstNumber)).trim()));
-            transaction.setCategory(TransactionCategory.INCOME.toString());
-            return transaction;
+            if(m.find())
+            {
+                String firstNumber = m.group();
+                transaction.setAmount(new BigDecimal(firstNumber.replaceAll(",", "")));
+
+                // transaction currency (between 0 and first number)
+                transaction.setCurrency(Currency.valueOf(message.substring(0, message.indexOf(firstNumber)).trim()));
+
+                // category transfer in
+                transaction.setCategory(TransactionCategory.TRANSFER_IN.toString());
+
+                return transaction;
+            }
         }
-        else
-        {
-            return null;
-        }
 
-        transaction.setCategory(TransactionCategorizer.getInstance().getCategoryFromString(transaction.getIssuer()));
-
-        return transaction;
+        return null;
     }
 
     // ============================================================================================================================================================

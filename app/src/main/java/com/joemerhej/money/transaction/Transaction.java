@@ -14,7 +14,7 @@ import java.util.Date;
 public class Transaction
 {
     private TransactionType mType;
-    private BigDecimal mAmount;
+    private BigDecimal mAmount;         // always positive
     private Currency mCurrency;
     private Date mDate;
     private String mIssuer;
@@ -55,6 +55,12 @@ public class Transaction
     public static Transaction from(Sms sms)
     {
         return SmsUtils.getTransactionFromSms(sms);
+    }
+
+
+    public boolean negates(Transaction t)
+    {
+        return mAmount.compareTo(t.getAmount()) == 0;
     }
 
     @Override

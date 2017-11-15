@@ -26,6 +26,7 @@ import java.util.List;
 public class MainChartSpendingFragment extends Fragment
 {
     private static final String ENTRIES_KEY = "entries";
+    private static final String COLORS_KEY = "colors";
 
     // views
     private PieChart mSpendingChart;
@@ -36,12 +37,13 @@ public class MainChartSpendingFragment extends Fragment
     {
     }
 
-    public static MainChartSpendingFragment newInstance(ArrayList<PieEntry> entries)
+    public static MainChartSpendingFragment newInstance(ArrayList<PieEntry> entries, ArrayList<Integer> colors)
     {
         MainChartSpendingFragment fragment = new MainChartSpendingFragment();
 
         Bundle args = new Bundle();
         args.putParcelableArrayList(ENTRIES_KEY, entries);
+        args.putIntegerArrayList(COLORS_KEY, colors);
         fragment.setArguments(args);
 
         return fragment;
@@ -52,11 +54,15 @@ public class MainChartSpendingFragment extends Fragment
     {
         View rootView = inflater.inflate(R.layout.fragment_spending_chart, container, false);
 
+        // get the arguments
+        List<PieEntry> entries = getArguments().getParcelableArrayList(ENTRIES_KEY);
+        ArrayList<Integer> colors = getArguments().getIntegerArrayList(COLORS_KEY);
+
         // set up views
         mSpendingChart = rootView.findViewById(R.id.spending_chart);
 
         mSpendingChart.getDescription().setEnabled(false);
-        mSpendingChart.setExtraOffsets(25, 30, 25, 30);
+        mSpendingChart.setExtraOffsets(35, 40, 35, 40);
         mSpendingChart.setDragDecelerationFrictionCoef(0.5f);
         mSpendingChart.setRotationEnabled(true);
         mSpendingChart.setTransparentCircleColor(Color.rgb(105, 105, 105));
@@ -65,9 +71,6 @@ public class MainChartSpendingFragment extends Fragment
         mSpendingChart.setEntryLabelColor(Color.BLACK);
 
         mSpendingChart.animateY(1000, Easing.EasingOption.EaseInOutCubic);
-
-
-        List<PieEntry> entries = getArguments().getParcelableArrayList("entries");
 
         PieDataSet dataSet = new PieDataSet(entries, "Categories");
 
@@ -82,7 +85,7 @@ public class MainChartSpendingFragment extends Fragment
 
         mSpendingChart.getLegend().setEnabled(false);
 
-        dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        dataSet.setColors(colors);
         dataSet.setSliceSpace(0f);
 
         PieData data = new PieData(dataSet);
@@ -94,15 +97,6 @@ public class MainChartSpendingFragment extends Fragment
         mSpendingChart.invalidate();
 
         return rootView;
-    }
-
-    public static int rgb(String hex)
-    {
-        int color = (int) Long.parseLong(hex.replace("#", ""), 16);
-        int r = (color >> 16) & 0xFF;
-        int g = (color >> 8) & 0xFF;
-        int b = (color >> 0) & 0xFF;
-        return Color.rgb(r, g, b);
     }
 }
 
