@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements Observer
         }
 
         // mock main account
-        //mMainAccount.mock();
+        mMainAccount.mock();
 
         // set up main account balance
         mAccountBalanceTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(mMainAccount.getBalance().intValue()) + " " + mMainAccount.getCurrency().toString());
@@ -498,6 +498,16 @@ public class MainActivity extends AppCompatActivity implements Observer
     // =============================================================================================================================================================
     // CLICK LISTENERS (from xml)
     // =============================================================================================================================================================
+
+    // handling clicking the category buttons
+    public void onCategoryButtonClick(View view)
+    {
+    }
+
+    // handling clicking the category transaction list buttons
+    public void onCategoryButtonClickList(View view)
+    {
+    }
 
     // send sms button click listener that will send the sms provided to the number provided
     public void SendSms(View view)

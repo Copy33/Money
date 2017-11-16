@@ -144,7 +144,7 @@ public class Account
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(32.00), Currency.AED, sdf.parse("30/10/2017 09:49:53"), "www.turnlunchon.com, INTERNET. Avl Cr.", "Food"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(1040), Currency.AED, sdf.parse("29/10/2017 19:17:25"), null, "Transfer Out"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(80.00), Currency.AED, sdf.parse("29/10/2017 18:12:23"), "NATIONAL TAXI, DUBAI. Avl Cr.", "Transport"));
-            applyTransaction(new Transaction(TransactionType.DEPOSIT, new BigDecimal(19176), Currency.AED, sdf.parse("29/10/2017 15:03:20"), null, "Salary"));
+            applyTransaction(new Transaction(TransactionType.DEPOSIT, new BigDecimal(19176), Currency.AED, sdf.parse("29/10/2017 15:03:20"), null, "Transfer In"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(19176), Currency.AED, sdf.parse("29/10/2017 15:02:55"), null, "Transfer Out"));
             applyTransaction(new Transaction(TransactionType.WITHDRAWAL, new BigDecimal(1840), Currency.AED, sdf.parse("29/10/2017 15:01:23"), null, "Transfer Out"));
             applyTransaction(new Transaction(TransactionType.DEPOSIT, new BigDecimal(30000), Currency.AED, sdf.parse("29/10/2017 14:54:45"), null, "Salary"));

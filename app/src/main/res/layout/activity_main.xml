@@ -32,10 +32,307 @@
             android:id="@+id/main_charts_view_pager"
             android:layout_width="match_parent"
             android:layout_height="350dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:nestedScrollingEnabled="false">
         </android.support.v4.view.ViewPager>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/category_rent_button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/blue"
+                android:drawableStart="@drawable/ic_home_white_24dp"
+                android:onClick="onCategoryButtonClick"/>
+
+            <Button
+                android:id="@+id/category_transport_button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/yellow"
+                android:drawableStart="@drawable/ic_car_white_24dp"
+                android:onClick="onCategoryButtonClick"/>
+
+            <Button
+                android:id="@+id/category_bills_button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/red"
+                android:drawableStart="@drawable/ic_currency_usd_white_24dp"
+                android:onClick="onCategoryButtonClick"/>
+
+            <Button
+                android:id="@+id/category_entertainment_button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/pink"
+                android:drawableStart="@drawable/ic_martini_white_24dp"
+                android:onClick="onCategoryButtonClick"/>
+
+            <Button
+                android:id="@+id/category_transfer_out_button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/blue_transfer"
+                android:drawableStart="@drawable/ic_arrow_right_white_24dp"
+                android:onClick="onCategoryButtonClick"/>
+
+            <Button
+                android:id="@+id/category_shopping_button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/orange"
+                android:drawableStart="@drawable/ic_shopping_white_24dp"
+                android:onClick="onCategoryButtonClick"/>
+
+            <Button
+                android:id="@+id/category_food_button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/green"
+                android:drawableStart="@drawable/ic_food_fork_drink_white_24dp"
+                android:onClick="onCategoryButtonClick"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/category_groceries_button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/turquoise"
+                android:drawableStart="@drawable/ic_cart_white_24dp"
+                android:onClick="onCategoryButtonClick"/>
+
+            <Button
+                android:id="@+id/category_care_button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/lime"
+                android:drawableStart="@drawable/ic_content_cut_white_24dp"
+                android:onClick="onCategoryButtonClick"/>
+
+            <Button
+                android:id="@+id/category_sports_button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/purple"
+                android:drawableStart="@drawable/ic_soccer_white_24dp"
+                android:onClick="onCategoryButtonClick"/>
+
+            <Button
+                android:id="@+id/category_health_button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/navy"
+                android:drawableStart="@drawable/ic_hospital_white_24dp"
+                android:onClick="onCategoryButtonClick"/>
+
+            <Button
+                android:id="@+id/category_pets_button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/grey"
+                android:drawableStart="@drawable/ic_cat_white_24dp"
+                android:onClick="onCategoryButtonClick"/>
+
+            <Button
+                android:id="@+id/category_other_button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/silver"
+                android:drawableStart="@drawable/ic_dots_horizontal_white_24dp"
+                android:onClick="onCategoryButtonClick"/>
+
+            <Button
+                android:id="@+id/category_none_button"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/black"
+                android:drawableStart="@drawable/ic_alert_circle_outline_white_24dp"
+                android:onClick="onCategoryButtonClick"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="30dp"
+            android:text=""/>
+
+        <Button
+            android:id="@+id/category_rent_button_list"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/blue"
+            android:drawableStart="@drawable/ic_home_white_24dp"
+            android:onClick="onCategoryButtonClickList"
+            android:text="Rent"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/category_transport_button_list"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/yellow"
+            android:drawableStart="@drawable/ic_car_white_24dp"
+            android:onClick="onCategoryButtonClickList"
+            android:text="Transport"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/category_bills_button_list"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/red"
+            android:drawableStart="@drawable/ic_currency_usd_white_24dp"
+            android:onClick="onCategoryButtonClickList"
+            android:text="Bills"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/category_entertainment_button_list"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/pink"
+            android:drawableStart="@drawable/ic_martini_white_24dp"
+            android:onClick="onCategoryButtonClickList"
+            android:text="Entertainment"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/category_transfer_out_button_list"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/blue_transfer"
+            android:drawableStart="@drawable/ic_arrow_right_white_24dp"
+            android:onClick="onCategoryButtonClickList"
+            android:text="Transfer"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/category_shopping_button_list"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/orange"
+            android:drawableStart="@drawable/ic_shopping_white_24dp"
+            android:onClick="onCategoryButtonClickList"
+            android:text="Shopping"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/category_food_button_list"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/green"
+            android:drawableStart="@drawable/ic_food_fork_drink_white_24dp"
+            android:onClick="onCategoryButtonClickList"
+            android:text="Food"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/category_groceries_button_list"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/turquoise"
+            android:drawableStart="@drawable/ic_cart_white_24dp"
+            android:onClick="onCategoryButtonClickList"
+            android:text="Groceries"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/category_care_button_list"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/lime"
+            android:drawableStart="@drawable/ic_content_cut_white_24dp"
+            android:onClick="onCategoryButtonClickList"
+            android:text="Personal Care"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/category_sports_button_list"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/purple"
+            android:drawableStart="@drawable/ic_soccer_white_24dp"
+            android:onClick="onCategoryButtonClickList"
+            android:text="Sports"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/category_health_button_list"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/navy"
+            android:drawableStart="@drawable/ic_hospital_white_24dp"
+            android:onClick="onCategoryButtonClickList"
+            android:text="Health"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/category_pets_button_list"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/grey"
+            android:drawableStart="@drawable/ic_cat_white_24dp"
+            android:onClick="onCategoryButtonClickList"
+            android:text="Pets"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/category_other_button_list"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/silver"
+            android:drawableStart="@drawable/ic_dots_horizontal_white_24dp"
+            android:onClick="onCategoryButtonClickList"
+            android:text="Other"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/category_none_button_list"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/black"
+            android:drawableStart="@drawable/ic_alert_circle_outline_white_24dp"
+            android:onClick="onCategoryButtonClickList"
+            android:text="Uncategorized"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"/>
 
 
         <!-- ==================== THIS IS FOR LATER ==================== -->

@@ -6,26 +6,26 @@ package com.joemerhej.money.transaction;
 
 public enum TransactionCategory
 {
-    NONE("None"),
+    NONE("None"),                   // black
 
-    SALARY("Salary"),
-    TRANSFER_IN("Transfer In"),
-    CASH("Cash"),
+    SALARY("Salary"),               // green_salary
+    TRANSFER_IN("Transfer In"),     // green_transfer
+    CASH("Cash"),                   // green_cash
 
-    TRANSFER_OUT("Transfer Out"),
-    RENT("Rent"),
-    TRANSPORT("Transport"),
-    ENTERTAINMENT("Entertainment"),
-    FOOD("Food"),
-    BILLS("Bills"),
-    TRAVEL("Travel"),
-    SHOPPING("Shopping"),
-    GROCERIES("Groceries"),
-    CARE("Care"),
-    SPORTS("Sports"),
-    HEALTH("Health"),
-    PETS("Pets"),
-    OTHER("Other");
+    TRANSFER_OUT("Transfer Out"),   // blue_transfer
+    RENT("Rent"),                   // blue
+    TRANSPORT("Transport"),         // yellow
+    ENTERTAINMENT("Entertainment"), // pink
+    FOOD("Food"),                   // green
+    BILLS("Bills"),                 // red
+    TRAVEL("Travel"),               // brown
+    SHOPPING("Shopping"),           // orange
+    GROCERIES("Groceries"),         // turquoise
+    CARE("Care"),                   // lime
+    SPORTS("Sports"),               // purple
+    HEALTH("Health"),               // navy
+    PETS("Pets"),                   // grey
+    OTHER("Other");                 // silver
 
     private final String mValue;
 

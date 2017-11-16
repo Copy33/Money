@@ -6,13 +6,13 @@ package com.joemerhej.money.account;
 
 public enum Currency
 {
-    AED("AED");
+    AED("aed");
 
     private final String mValue;
 
-    Currency(String aed)
+    Currency(String value)
     {
-        this.mValue = aed;
+        this.mValue = value;
     }
 
     @Override
