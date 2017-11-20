@@ -15,9 +15,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -125,6 +128,10 @@ public class MainActivity extends AppCompatActivity implements Observer
         SmsObservable.getInstance().addObserver(this);
         // =========================================================================================
 
+        // set up toolbar
+        Toolbar toolbar = findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+
         // set up views
         mAccountBalanceTextView = findViewById(R.id.account_balance_text_view);
         mViewPager = findViewById(R.id.main_charts_view_pager);
@@ -144,8 +151,8 @@ public class MainActivity extends AppCompatActivity implements Observer
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy");
             try
             {
-                Date fromDate = sdf.parse("25/10/2016");
-                Date toDate = sdf.parse("03/11/2018");
+                Date fromDate = sdf.parse("25/10/2017");
+                Date toDate = sdf.parse("03/11/2017");
                 smsList = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
             }
             catch(ParseException e)
@@ -177,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements Observer
         mAccountBalanceTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(mMainAccount.getBalance().intValue()) + " " + mMainAccount.getCurrency().toString());
 
         // fill in the transactions by category
-        populateAccounts();
+        populateCategoryAccounts();
 
         // match transfers to eliminate transfers within account
         matchTransfers();
@@ -194,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements Observer
 
     }
 
-    private void populateAccounts()
+    private void populateCategoryAccounts()
     {
         for(Transaction t : mMainAccount.getTransactions())
         {
@@ -458,6 +465,31 @@ public class MainActivity extends AppCompatActivity implements Observer
             mIncomeEntries.add(new PieEntry(labelNumber, TransactionCategory.CASH.toString()));
             mIncomeColors.add(ContextCompat.getColor(this, R.color.green_cash));
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if(id == R.id.actions_calendar_range)
+        {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

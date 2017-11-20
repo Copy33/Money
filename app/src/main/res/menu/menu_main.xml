@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.joemerhej.money.activities.MainActivity">
+    <item
+        android:id="@+id/actions_calendar_range"
+        android:orderInCategory="100"
+        android:title="@string/menu_calendar_range_title"
+        android:icon="@drawable/ic_calendar_range_white_24dp"
+        app:showAsAction="always"/>
+</menu>

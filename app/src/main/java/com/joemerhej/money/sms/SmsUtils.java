@@ -313,7 +313,7 @@ public class SmsUtils
     }
 
     // ============================================================================================================================================================
-    // returns a list of all sms on the device from a specific address received between a date range
+    // returns a list of all sms on the device from a specific address received in [fromDate, toDate).
     // ============================================================================================================================================================
     public static List<Sms> getAllSms(Context context, final String fromAddress, final Date fromDate, final Date toDate)
     {

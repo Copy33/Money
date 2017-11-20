@@ -54,6 +54,9 @@ public class TransactionCategorizer
         mCategoryMap.put("supermarket", TransactionCategory.GROCERIES.toString());
         mCategoryMap.put("minimarket", TransactionCategory.GROCERIES.toString());
         mCategoryMap.put("hypermarket", TransactionCategory.GROCERIES.toString());
+        mCategoryMap.put("grocer", TransactionCategory.GROCERIES.toString());
+        mCategoryMap.put("elgrocer", TransactionCategory.GROCERIES.toString());
+        mCategoryMap.put("instashop", TransactionCategory.GROCERIES.toString());
 
         mCategoryMap.put("food", TransactionCategory.FOOD.toString());
         mCategoryMap.put("restaurant", TransactionCategory.FOOD.toString());

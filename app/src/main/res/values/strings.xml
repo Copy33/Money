@@ -9,6 +9,8 @@
     <string name="spending_title">Spending</string>
     <string name="income_title">Income</string>
 
-    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="menu_calendar_range_title">Range</string>
+
+
 
 </resources>
