@@ -81,6 +81,7 @@ public class TransactionCategorizer
         mCategoryMap.put("pasta", TransactionCategory.FOOD.toString());
 
         mCategoryMap.put("club", TransactionCategory.ENTERTAINMENT.toString());
+        mCategoryMap.put("hotel", TransactionCategory.ENTERTAINMENT.toString());
         mCategoryMap.put("drink", TransactionCategory.ENTERTAINMENT.toString());
         mCategoryMap.put("beverage", TransactionCategory.ENTERTAINMENT.toString());
         mCategoryMap.put("jetty", TransactionCategory.ENTERTAINMENT.toString());

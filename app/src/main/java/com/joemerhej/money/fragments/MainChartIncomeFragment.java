@@ -6,11 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -29,7 +27,7 @@ public class MainChartIncomeFragment extends Fragment
     private static final String COLORS_KEY = "colors";
 
     // views
-    private PieChart mSpendingChart;
+    private PieChart mIncomeChart;
 
 
     // every fragment requires a default constructor and a newInstance method
@@ -59,18 +57,18 @@ public class MainChartIncomeFragment extends Fragment
         ArrayList<Integer> colors = getArguments().getIntegerArrayList(COLORS_KEY);
 
         // set up views
-        mSpendingChart = rootView.findViewById(R.id.income_chart);
+        mIncomeChart = rootView.findViewById(R.id.income_chart);
 
-        mSpendingChart.getDescription().setEnabled(false);
-        mSpendingChart.setExtraOffsets(35, 40, 35, 40);
-        mSpendingChart.setDragDecelerationFrictionCoef(0.5f);
-        mSpendingChart.setRotationEnabled(true);
-        mSpendingChart.setTransparentCircleColor(Color.rgb(105, 105, 105));
-        mSpendingChart.setTransparentCircleRadius(65);
-        mSpendingChart.setHoleRadius(55);
-        mSpendingChart.setEntryLabelColor(Color.BLACK);
+        mIncomeChart.getDescription().setEnabled(false);
+        mIncomeChart.setExtraOffsets(35, 40, 35, 40);
+        mIncomeChart.setDragDecelerationFrictionCoef(0.5f);
+        mIncomeChart.setRotationEnabled(true);
+        mIncomeChart.setTransparentCircleColor(Color.rgb(105, 105, 105));
+        mIncomeChart.setTransparentCircleRadius(65);
+        mIncomeChart.setHoleRadius(55);
+        mIncomeChart.setEntryLabelColor(Color.BLACK);
 
-        mSpendingChart.animateY(1000, Easing.EasingOption.EaseInOutCubic);
+        mIncomeChart.animateY(1000, Easing.EasingOption.EaseInOutCubic);
 
         PieDataSet dataSet = new PieDataSet(entries, "Categories");
 
@@ -83,7 +81,7 @@ public class MainChartIncomeFragment extends Fragment
         dataSet.setValueLinePart2Length(0.4f);
         dataSet.setHighlightEnabled(true);
 
-        mSpendingChart.getLegend().setEnabled(false);
+        mIncomeChart.getLegend().setEnabled(false);
 
         dataSet.setColors(colors);
         dataSet.setSliceSpace(0f);
@@ -92,9 +90,9 @@ public class MainChartIncomeFragment extends Fragment
 
         data.setValueTextSize(10f);
 
-
-        mSpendingChart.setData(data);
-        mSpendingChart.invalidate();
+        mIncomeChart.setRotationEnabled(false);
+        mIncomeChart.setData(data);
+        mIncomeChart.invalidate();
 
         return rootView;
     }

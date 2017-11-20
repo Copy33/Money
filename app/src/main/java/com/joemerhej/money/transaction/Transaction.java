@@ -26,6 +26,7 @@ public class Transaction
         mCurrency = mCurrency.AED;
         mAmount = BigDecimal.ZERO;
         mCategory = TransactionCategory.NONE.toString();
+        mIssuer = "";
     }
 
     public Transaction(TransactionType mType, BigDecimal mAmount, Currency mCurrency, Date mDate, String mIssuer, String mCategory)
@@ -34,7 +35,11 @@ public class Transaction
         this.mAmount = mAmount;
         this.mCurrency = mCurrency;
         this.mDate = mDate;
-        this.mIssuer = mIssuer;
+
+        if(mIssuer != null)
+            this.mIssuer = mIssuer;
+        else
+            this.mIssuer = "";
 
         if(mCategory != null)
             this.mCategory = mCategory;
@@ -74,6 +79,11 @@ public class Transaction
                 ", mIssuer='" + mIssuer + '\'' +
                 ", mCategory='" + mCategory + '\'' +
                 '}';
+    }
+
+    public String toItemString()
+    {
+        return mAmount.intValue() + " " + mCurrency.toString().toUpperCase() + " -- " + mIssuer.toUpperCase() +"\n";
     }
 
     public TransactionType getType()

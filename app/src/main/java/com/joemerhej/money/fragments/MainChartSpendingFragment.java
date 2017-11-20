@@ -92,7 +92,7 @@ public class MainChartSpendingFragment extends Fragment
 
         data.setValueTextSize(10f);
 
-
+        mSpendingChart.setRotationEnabled(false);
         mSpendingChart.setData(data);
         mSpendingChart.invalidate();
 

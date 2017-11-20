@@ -32,6 +32,44 @@
             android:layout_margin="10dp"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/previous_day_button"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:onClick="dayButton"
+                    android:text="&lt;"/>
+
+                <Button
+                    android:id="@+id/today_button"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:onClick="dayButton"
+                    android:text="today"/>
+
+                <Button
+                    android:id="@+id/next_day_button"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:onClick="dayButton"
+                    android:text="&gt;"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/day_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="08/11/2017"
+                android:textSize="20sp"/>
+
             <TextView
                 android:id="@+id/account_balance_text_view"
                 android:layout_width="match_parent"
@@ -47,13 +85,12 @@
                 android:layout_height="wrap_content">
             </android.support.design.widget.TabLayout>
 
-            <android.support.v4.view.ViewPager
+            <com.joemerhej.money.views.NonSwipeableViewPager
                 android:id="@+id/main_charts_view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
-                android:nestedScrollingEnabled="false"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
-            </android.support.v4.view.ViewPager>
+                android:nestedScrollingEnabled="false">
+            </com.joemerhej.money.views.NonSwipeableViewPager>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -174,6 +211,15 @@
                     android:onClick="onCategoryButtonClick"/>
 
                 <Button
+                    android:id="@+id/category_travel_button"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/brown"
+                    android:drawableStart="@drawable/ic_airplane_white_24dp"
+                    android:onClick="onCategoryButtonClick"/>
+
+                <Button
                     android:id="@+id/category_other_button"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
@@ -182,22 +228,23 @@
                     android:drawableStart="@drawable/ic_dots_horizontal_white_24dp"
                     android:onClick="onCategoryButtonClick"/>
 
-                <Button
-                    android:id="@+id/category_none_button"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="@color/black"
-                    android:drawableStart="@drawable/ic_alert_circle_outline_white_24dp"
-                    android:onClick="onCategoryButtonClick"/>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/category_none_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:backgroundTint="@color/black"
+                android:drawableStart="@drawable/ic_alert_circle_outline_white_24dp"
+                android:onClick="onCategoryButtonClick"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingTop="30dp"
-                android:text=""/>
+                android:text=""
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/category_rent_button_list"
@@ -208,7 +255,15 @@
                 android:onClick="onCategoryButtonClickList"
                 android:text="Rent"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/category_rent_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/category_transport_button_list"
@@ -219,7 +274,15 @@
                 android:onClick="onCategoryButtonClickList"
                 android:text="Transport"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/category_transport_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/category_bills_button_list"
@@ -230,7 +293,15 @@
                 android:onClick="onCategoryButtonClickList"
                 android:text="Bills"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/category_bills_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/category_entertainment_button_list"
@@ -241,7 +312,15 @@
                 android:onClick="onCategoryButtonClickList"
                 android:text="Entertainment"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/category_entertainment_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/category_transfer_out_button_list"
@@ -252,7 +331,15 @@
                 android:onClick="onCategoryButtonClickList"
                 android:text="Transfer"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/category_transfer_out_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/category_shopping_button_list"
@@ -263,7 +350,15 @@
                 android:onClick="onCategoryButtonClickList"
                 android:text="Shopping"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/category_shopping_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/category_food_button_list"
@@ -274,7 +369,15 @@
                 android:onClick="onCategoryButtonClickList"
                 android:text="Food"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/category_food_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/category_groceries_button_list"
@@ -285,7 +388,15 @@
                 android:onClick="onCategoryButtonClickList"
                 android:text="Groceries"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/category_groceries_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/category_care_button_list"
@@ -296,7 +407,15 @@
                 android:onClick="onCategoryButtonClickList"
                 android:text="Personal Care"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/category_care_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/category_sports_button_list"
@@ -307,7 +426,15 @@
                 android:onClick="onCategoryButtonClickList"
                 android:text="Sports"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/category_sports_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/category_health_button_list"
@@ -318,7 +445,15 @@
                 android:onClick="onCategoryButtonClickList"
                 android:text="Health"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/category_health_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/category_pets_button_list"
@@ -329,7 +464,34 @@
                 android:onClick="onCategoryButtonClickList"
                 android:text="Pets"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/category_pets_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/category_travel_button_list"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:backgroundTint="@color/brown"
+                android:drawableStart="@drawable/ic_airplane_white_24dp"
+                android:onClick="onCategoryButtonClickList"
+                android:text="Travel"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/category_travel_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/category_other_button_list"
@@ -340,7 +502,15 @@
                 android:onClick="onCategoryButtonClickList"
                 android:text="Other"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/category_other_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/category_none_button_list"
@@ -351,20 +521,36 @@
                 android:onClick="onCategoryButtonClickList"
                 android:text="Uncategorized"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/category_none_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"/>
 
 
             <!-- ==================== THIS IS FOR LATER ==================== -->
             <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="100dp">
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingTop="10dp">
+                android:paddingTop="10dp"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -381,13 +567,15 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="SMS to send:"/>
+                    android:text="SMS to send:"
+                    android:visibility="gone"/>
 
                 <EditText
                     android:id="@+id/sms_to_send_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAllCaps="false"/>
+                    android:textAllCaps="false"
+                    android:visibility="gone"/>
 
 
                 <Button
@@ -395,7 +583,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="SendSms"
-                    android:text="Send SMS"/>
+                    android:text="Send SMS"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 

@@ -12,7 +12,6 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,11 +21,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.data.PieEntry;
+import com.joemerhej.money.views.NonSwipeableViewPager;
 import com.joemerhej.money.R;
 import com.joemerhej.money.account.Account;
 import com.joemerhej.money.adapters.MainChartsFragmentPagerAdapter;
@@ -40,6 +41,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements Observer
     private static final String TAG = "MainActivity";
     private static final String PREF_USER_MOBILE_PHONE = "pref_user_mobile_phone";
     private static final int SMS_PERMISSION_CODE = 0;
+    private static boolean MOCK = true;
 
     // =============================================================================================
     // PROTOTYPE SECTION
@@ -66,18 +69,58 @@ public class MainActivity extends AppCompatActivity implements Observer
     private SharedPreferences mSharedPreferences;
     // =============================================================================================
 
-    // views
+    // views : header
+    private TextView mDayTextView;
     private TextView mAccountBalanceTextView;
-    private ViewPager mViewPager;
+    private NonSwipeableViewPager mViewPager;
     private MainChartsFragmentPagerAdapter mPagerAdapter;
     private TabLayout mMainChartsTabs;
 
+    // views : charts
     private ArrayList<PieEntry> mSpendingEntries = new ArrayList<>();
     private ArrayList<Integer> mSpendingColors = new ArrayList<>();
     private ArrayList<PieEntry> mIncomeEntries = new ArrayList<>();
     private ArrayList<Integer> mIncomeColors = new ArrayList<>();
 
-    // data
+    // views : categories
+    private Button mRentButton;
+    private Button mTransferOutButton;
+    private Button mTransportButton;
+    private Button mEntertainmentButton;
+    private Button mFoodButton;
+    private Button mBillsButton;
+    private Button mTravelButton;
+    private Button mShoppingButton;
+    private Button mGroceriesButton;
+    private Button mCareButton;
+    private Button mSportsButton;
+    private Button mHealthButton;
+    private Button mPetsButton;
+    private Button mOtherButton;
+    private Button mNoneButton;
+    private TextView mRentTextView;
+    private TextView mTransferOutTextView;
+    private TextView mTransportTextView;
+    private TextView mEntertainmentTextView;
+    private TextView mFoodTextView;
+    private TextView mBillsTextView;
+    private TextView mTravelTextView;
+    private TextView mShoppingTextView;
+    private TextView mGroceriesTextView;
+    private TextView mCareTextView;
+    private TextView mSportsTextView;
+    private TextView mHealthTextView;
+    private TextView mPetsTextView;
+    private TextView mOtherTextView;
+    private TextView mNoneTextView;
+
+    // data: time
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy", Locale.US);
+    private static final Long one_day = Long.valueOf(24 * 60 * 60 * 1000);
+    private Date mFromDate;
+    private Date mToDate;
+
+    // data : accounts
     private Account mMainAccount = new Account();
 
     private Account mAccountSalary = new Account();
@@ -133,10 +176,42 @@ public class MainActivity extends AppCompatActivity implements Observer
         setSupportActionBar(toolbar);
 
         // set up views
+        mDayTextView = findViewById(R.id.day_text_view);
         mAccountBalanceTextView = findViewById(R.id.account_balance_text_view);
         mViewPager = findViewById(R.id.main_charts_view_pager);
         mMainChartsTabs = findViewById(R.id.main_charts_tabs);
 
+        mRentButton = findViewById(R.id.category_rent_button_list);
+        mTransferOutButton = findViewById(R.id.category_transfer_out_button_list);
+        mTransportButton = findViewById(R.id.category_transport_button_list);
+        mEntertainmentButton = findViewById(R.id.category_entertainment_button_list);
+        mFoodButton = findViewById(R.id.category_food_button_list);
+        mBillsButton = findViewById(R.id.category_bills_button_list);
+        mTravelButton = findViewById(R.id.category_travel_button_list);
+        mShoppingButton = findViewById(R.id.category_shopping_button_list);
+        mGroceriesButton = findViewById(R.id.category_groceries_button_list);
+        mCareButton = findViewById(R.id.category_care_button_list);
+        mSportsButton = findViewById(R.id.category_sports_button_list);
+        mHealthButton = findViewById(R.id.category_health_button_list);
+        mPetsButton = findViewById(R.id.category_pets_button_list);
+        mOtherButton = findViewById(R.id.category_other_button_list);
+        mNoneButton = findViewById(R.id.category_none_button_list);
+
+        mRentTextView = findViewById(R.id.category_rent_text_view);
+        mTransferOutTextView = findViewById(R.id.category_transfer_out_text_view);
+        mTransportTextView = findViewById(R.id.category_transport_text_view);
+        mEntertainmentTextView = findViewById(R.id.category_entertainment_text_view);
+        mFoodTextView = findViewById(R.id.category_food_text_view);
+        mBillsTextView = findViewById(R.id.category_bills_text_view);
+        mTravelTextView = findViewById(R.id.category_travel_text_view);
+        mShoppingTextView = findViewById(R.id.category_shopping_text_view);
+        mGroceriesTextView = findViewById(R.id.category_groceries_text_view);
+        mCareTextView = findViewById(R.id.category_care_text_view);
+        mSportsTextView = findViewById(R.id.category_sports_text_view);
+        mHealthTextView = findViewById(R.id.category_health_text_view);
+        mPetsTextView = findViewById(R.id.category_pets_text_view);
+        mOtherTextView = findViewById(R.id.category_other_text_view);
+        mNoneTextView = findViewById(R.id.category_none_text_view);
 
         // ask for permission to access sms
         if(!hasReadSmsPermission())
@@ -144,47 +219,121 @@ public class MainActivity extends AppCompatActivity implements Observer
             // should always call showRequestPermissionsInfoAlertDialog function and not requestReadSmsPermission directly to give the app dialog first
             showRequestPermissionsInfoAlertDialog();
         }
-        else
+
+
+        Date currentTime = Calendar.getInstance().getTime();
+
+        String today = sdf.format(currentTime);
+        String tomorrow = sdf.format(currentTime.getTime() + one_day);
+
+        try
         {
-            // get the list of sms between 2 dates
-            List<Sms> smsList = new ArrayList<>();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy");
-            try
-            {
-                Date fromDate = sdf.parse("25/10/2017");
-                Date toDate = sdf.parse("03/11/2017");
-                smsList = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
-            }
-            catch(ParseException e)
-            {
-                e.printStackTrace();
-            }
-
-            // go through every sms, retrieve transaction, and add it to the account
-            Set<String> set = new HashSet<>();
-
-            for(Sms sms : smsList)
-            {
-                Transaction transaction = Transaction.from(sms);
-                mMainAccount.applyTransaction(transaction);
-
-                if(transaction != null)
-                {
-                    set.add(transaction.getIssuer());
-                }
-            }
-
-            Log.d(TAG, "bla");
+            mFromDate = sdf.parse(today);
+            mToDate = sdf.parse(tomorrow);
+        }
+        catch(ParseException e)
+        {
+            e.printStackTrace();
         }
 
-        // mock main account
-        mMainAccount.mock();
+        populatePage(mFromDate, mToDate);
+
+    }
+
+    private void populatePage(Date fromDate, Date toDate)
+    {
+        // reset the accounts
+        mMainAccount.clear();
+        mAccountSalary.clear();
+        mAccountTransferIn.clear();
+        mAccountCash.clear();
+        mAccountTransferOut.clear();
+        mAccountRent.clear();
+        mAccountBills.clear();
+        mAccountGroceries.clear();
+        mAccountFood.clear();
+        mAccountEntertainment.clear();
+        mAccountTransport.clear();
+        mAccountSports.clear();
+        mAccountShopping.clear();
+        mAccountHealth.clear();
+        mAccountTravel.clear();
+        mAccountPets.clear();
+        mAccountPersonalCare.clear();
+        mAccountOther.clear();
+        mAccountNone.clear();
+
+        mSpendingColors.clear();
+        mSpendingEntries.clear();
+        mIncomeColors.clear();
+        mIncomeEntries.clear();
+
+        // reset the views
+        mRentButton.setVisibility(View.GONE);
+        mTransferOutButton.setVisibility(View.GONE);
+        mTransportButton.setVisibility(View.GONE);
+        mEntertainmentButton.setVisibility(View.GONE);
+        mFoodButton.setVisibility(View.GONE);
+        mBillsButton.setVisibility(View.GONE);
+        mTravelButton.setVisibility(View.GONE);
+        mShoppingButton.setVisibility(View.GONE);
+        mGroceriesButton.setVisibility(View.GONE);
+        mCareButton.setVisibility(View.GONE);
+        mSportsButton.setVisibility(View.GONE);
+        mHealthButton.setVisibility(View.GONE);
+        mPetsButton.setVisibility(View.GONE);
+        mOtherButton.setVisibility(View.GONE);
+        mNoneButton.setVisibility(View.GONE);
+
+        mRentTextView.setVisibility(View.GONE);
+        mTransferOutTextView.setVisibility(View.GONE);
+        mTransportTextView.setVisibility(View.GONE);
+        mEntertainmentTextView.setVisibility(View.GONE);
+        mFoodTextView.setVisibility(View.GONE);
+        mBillsTextView.setVisibility(View.GONE);
+        mTravelTextView.setVisibility(View.GONE);
+        mShoppingTextView.setVisibility(View.GONE);
+        mGroceriesTextView.setVisibility(View.GONE);
+        mCareTextView.setVisibility(View.GONE);
+        mSportsTextView.setVisibility(View.GONE);
+        mHealthTextView.setVisibility(View.GONE);
+        mPetsTextView.setVisibility(View.GONE);
+        mOtherTextView.setVisibility(View.GONE);
+        mNoneTextView.setVisibility(View.GONE);
+
+        // set the views
+        mDayTextView.setText(sdf.format(fromDate));
+
+        // get the list of sms between 2 dates
+        List<Sms> smsList = new ArrayList<>();
+
+        smsList = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
+
+        // go through every sms, retrieve transaction, and add it to the account
+        Set<String> set = new HashSet<>();
+
+        for(Sms sms : smsList)
+        {
+            Transaction transaction = Transaction.from(sms);
+            mMainAccount.applyTransaction(transaction);
+
+            if(transaction != null)
+            {
+                set.add(transaction.getIssuer());
+            }
+        }
+
+        Log.d(TAG, "bla");
+
+        // mock data if needed
+        if(MOCK)
+            mMainAccount.mock();
 
         // set up main account balance
         mAccountBalanceTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(mMainAccount.getBalance().intValue()) + " " + mMainAccount.getCurrency().toString());
 
         // fill in the transactions by category
-        populateCategoryAccounts();
+        populateCategories();
 
         // match transfers to eliminate transfers within account
         matchTransfers();
@@ -198,104 +347,186 @@ public class MainActivity extends AppCompatActivity implements Observer
         mMainChartsTabs.setupWithViewPager(mViewPager);
         mMainChartsTabs.getTabAt(0).setText(getResources().getString(R.string.spending_title));
         mMainChartsTabs.getTabAt(1).setText(getResources().getString(R.string.income_title));
-
     }
 
-    private void populateCategoryAccounts()
+    private void populateCategories()
     {
+        String noneTextView = "";
+        String salaryTextView = "";
+        String transferInTextView = "";
+        String cashTextView = "";
+        String transferOutTextView = "";
+        String rentTextView = "";
+        String transportTextView = "";
+        String entertainmentTextView = "";
+        String foodTextView = "";
+        String billsTextView = "";
+        String travelTextView = "";
+        String shoppingTextView = "";
+        String groceriesTextView = "";
+        String careTextView = "";
+        String sportsTextView = "";
+        String healthTextView = "";
+        String petsTextView = "";
+        String otherTextView = "";
+
         for(Transaction t : mMainAccount.getTransactions())
         {
             if(t.getCategory().compareTo(TransactionCategory.NONE.toString()) == 0)
             {
                 mAccountNone.applyTransaction(t);
+                noneTextView += t.toItemString();
+                mNoneTextView.setVisibility(View.VISIBLE);
+                mNoneButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.SALARY.toString()) == 0)
             {
                 mAccountSalary.applyTransaction(t);
+                salaryTextView += t.toItemString();
                 continue;
             }
+            // TODO: finish the next 3
             if(t.getCategory().compareTo(TransactionCategory.TRANSFER_IN.toString()) == 0)
             {
                 mAccountTransferIn.applyTransaction(t);
+                transferInTextView += t.toItemString();
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.CASH.toString()) == 0)
             {
                 mAccountCash.applyTransaction(t);
+                cashTextView += t.toItemString();
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.TRANSFER_OUT.toString()) == 0)
             {
                 mAccountTransferOut.applyTransaction(t);
+                transferOutTextView += t.toItemString();
+                mTransferOutTextView.setVisibility(View.VISIBLE);
+                mTransferOutButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.RENT.toString()) == 0)
             {
                 mAccountRent.applyTransaction(t);
+                rentTextView += t.toItemString();
+                mRentTextView.setVisibility(View.VISIBLE);
+                mRentButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.BILLS.toString()) == 0)
             {
                 mAccountBills.applyTransaction(t);
+                billsTextView += t.toItemString();
+                mBillsTextView.setVisibility(View.VISIBLE);
+                mBillsButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.GROCERIES.toString()) == 0)
             {
                 mAccountGroceries.applyTransaction(t);
+                groceriesTextView += t.toItemString();
+                mGroceriesTextView.setVisibility(View.VISIBLE);
+                mGroceriesButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.FOOD.toString()) == 0)
             {
                 mAccountFood.applyTransaction(t);
+                foodTextView += t.toItemString();
+                mFoodTextView.setVisibility(View.VISIBLE);
+                mFoodButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.ENTERTAINMENT.toString()) == 0)
             {
                 mAccountEntertainment.applyTransaction(t);
+                entertainmentTextView += t.toItemString();
+                mEntertainmentTextView.setVisibility(View.VISIBLE);
+                mEntertainmentButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.TRANSPORT.toString()) == 0)
             {
                 mAccountTransport.applyTransaction(t);
+                transportTextView += t.toItemString();
+                mTransportTextView.setVisibility(View.VISIBLE);
+                mTransportButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.SPORTS.toString()) == 0)
             {
                 mAccountSports.applyTransaction(t);
+                sportsTextView += t.toItemString();
+                mSportsTextView.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.SHOPPING.toString()) == 0)
             {
                 mAccountShopping.applyTransaction(t);
+                shoppingTextView += t.toItemString();
+                mShoppingTextView.setVisibility(View.VISIBLE);
+                mShoppingButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.HEALTH.toString()) == 0)
             {
                 mAccountHealth.applyTransaction(t);
+                healthTextView += t.toItemString();
+                mHealthTextView.setVisibility(View.VISIBLE);
+                mHealthButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.TRAVEL.toString()) == 0)
             {
                 mAccountTravel.applyTransaction(t);
+                travelTextView += t.toItemString();
+                mTravelTextView.setVisibility(View.VISIBLE);
+                mTravelButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.PETS.toString()) == 0)
             {
                 mAccountPets.applyTransaction(t);
+                petsTextView += t.toItemString();
+                mPetsTextView.setVisibility(View.VISIBLE);
+                mPetsButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.CARE.toString()) == 0)
             {
                 mAccountPersonalCare.applyTransaction(t);
+                careTextView += t.toItemString();
+                mCareTextView.setVisibility(View.VISIBLE);
+                mCareButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.OTHER.toString()) == 0)
             {
                 mAccountOther.applyTransaction(t);
+                otherTextView += t.toItemString();
+                mOtherTextView.setVisibility(View.VISIBLE);
+                mOtherButton.setVisibility(View.VISIBLE);
                 continue;
             }
         }
+
+        mNoneTextView.setText(noneTextView);
+        mTransferOutTextView.setText(transferOutTextView);
+        mRentTextView.setText(rentTextView);
+        mTransportTextView.setText(transportTextView);
+        mEntertainmentTextView.setText(entertainmentTextView);
+        mFoodTextView.setText(foodTextView);
+        mBillsTextView.setText(billsTextView);
+        mTravelTextView.setText(travelTextView);
+        mShoppingTextView.setText(shoppingTextView);
+        mGroceriesTextView.setText(groceriesTextView);
+        mCareTextView.setText(careTextView);
+        mSportsTextView.setText(sportsTextView);
+        mHealthTextView.setText(healthTextView);
+        mPetsTextView.setText(petsTextView);
+        mOtherTextView.setText(otherTextView);
     }
 
     void matchTransfers()
@@ -539,6 +770,37 @@ public class MainActivity extends AppCompatActivity implements Observer
     // handling clicking the category transaction list buttons
     public void onCategoryButtonClickList(View view)
     {
+    }
+
+    // handle clicking on the previous/next day button
+    public void dayButton(View view)
+    {
+        try
+        {
+            if(view.getId() == R.id.previous_day_button)
+            {
+                mFromDate.setTime(mFromDate.getTime() - one_day);
+            }
+            else if(view.getId() == R.id.today_button)
+            {
+                Date currentTime = Calendar.getInstance().getTime();
+
+                String today = sdf.format(currentTime);
+                mFromDate = sdf.parse(today);
+            }
+            else if(view.getId() == R.id.next_day_button)
+            {
+                mFromDate.setTime(mFromDate.getTime() + one_day);
+            }
+
+            mToDate.setTime(mFromDate.getTime() + one_day);
+        }
+        catch(ParseException e)
+        {
+            e.printStackTrace();
+        }
+
+        populatePage(mFromDate, mToDate);
     }
 
     // send sms button click listener that will send the sms provided to the number provided
