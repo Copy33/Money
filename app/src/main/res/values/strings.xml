@@ -11,6 +11,7 @@
 
     <string name="menu_calendar_range_title">Range</string>
 
+    <string name="date_range_dialog_title">Date range</string>
 
 
 </resources>

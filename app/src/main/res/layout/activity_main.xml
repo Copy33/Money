@@ -38,27 +38,27 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/previous_day_button"
+                    android:id="@+id/previous_date_button"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:onClick="dayButton"
+                    android:onClick="dateRangeControlClick"
                     android:text="&lt;"/>
 
                 <Button
-                    android:id="@+id/today_button"
+                    android:id="@+id/current_date_button"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:onClick="dayButton"
-                    android:text="today"/>
+                    android:onClick="dateRangeControlClick"
+                    android:text="current"/>
 
                 <Button
-                    android:id="@+id/next_day_button"
+                    android:id="@+id/next_date_button"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:onClick="dayButton"
+                    android:onClick="dateRangeControlClick"
                     android:text="&gt;"/>
             </LinearLayout>
 

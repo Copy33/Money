@@ -79,6 +79,7 @@ public class TransactionCategorizer
         mCategoryMap.put("pizza", TransactionCategory.FOOD.toString());
         mCategoryMap.put("burger", TransactionCategory.FOOD.toString());
         mCategoryMap.put("pasta", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("cafe", TransactionCategory.FOOD.toString());
 
         mCategoryMap.put("club", TransactionCategory.ENTERTAINMENT.toString());
         mCategoryMap.put("hotel", TransactionCategory.ENTERTAINMENT.toString());
@@ -108,6 +109,9 @@ public class TransactionCategorizer
         mCategoryMap.put("furniture", TransactionCategory.SHOPPING.toString());
         mCategoryMap.put("souq", TransactionCategory.SHOPPING.toString());
         mCategoryMap.put("noon", TransactionCategory.SHOPPING.toString());
+        mCategoryMap.put("nike", TransactionCategory.SHOPPING.toString());
+        mCategoryMap.put("adidas", TransactionCategory.SHOPPING.toString());
+        mCategoryMap.put("retail", TransactionCategory.SHOPPING.toString());
 
         mCategoryMap.put("health", TransactionCategory.HEALTH.toString());
         mCategoryMap.put("hospital", TransactionCategory.HEALTH.toString());

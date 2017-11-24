@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.data.PieEntry;
+import com.joemerhej.money.dialogs.DateRangeDialogFragment;
 import com.joemerhej.money.views.NonSwipeableViewPager;
 import com.joemerhej.money.R;
 import com.joemerhej.money.account.Account;
@@ -50,13 +51,18 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity implements Observer
+public class MainActivity extends AppCompatActivity implements Observer, DateRangeDialogFragment.DateRangeDialogListener
 {
-    // general
+    // log tag
     private static final String TAG = "MainActivity";
+
+    // shared preferences keys
     private static final String PREF_USER_MOBILE_PHONE = "pref_user_mobile_phone";
+    private static final String PREF_USER_DATE_RANGE = "pref_user_date_range";
+
+    // general
     private static final int SMS_PERMISSION_CODE = 0;
-    private static boolean MOCK = true;
+    private static boolean MOCK = false;
 
     // =============================================================================================
     // PROTOTYPE SECTION
@@ -69,7 +75,17 @@ public class MainActivity extends AppCompatActivity implements Observer
     private SharedPreferences mSharedPreferences;
     // =============================================================================================
 
-    // views : header
+    // data: date range
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyy", Locale.US);
+    private static final Long ONE_DAY = Long.valueOf(24 * 60 * 60 * 1000);
+
+    private String mDateRangePreference;
+    private Date mOriginalFromDate;
+    private Date mOriginalToDate;
+    private Date mFromDate;
+    private Date mToDate;
+
+    // views : charts header
     private TextView mDayTextView;
     private TextView mAccountBalanceTextView;
     private NonSwipeableViewPager mViewPager;
@@ -114,12 +130,6 @@ public class MainActivity extends AppCompatActivity implements Observer
     private TextView mOtherTextView;
     private TextView mNoneTextView;
 
-    // data: time
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy", Locale.US);
-    private static final Long one_day = Long.valueOf(24 * 60 * 60 * 1000);
-    private Date mFromDate;
-    private Date mToDate;
-
     // data : accounts
     private Account mMainAccount = new Account();
 
@@ -150,6 +160,9 @@ public class MainActivity extends AppCompatActivity implements Observer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // set up shared preferences
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         // =========================================================================================
         // PROTOTYPE SECTION
         // =========================================================================================
@@ -161,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements Observer
         mSmsToSendEditText.setVisibility(View.GONE);
 
         // auto populate phone number form shared preferences
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         mNumberToSendFrom = mSharedPreferences.getString(PREF_USER_MOBILE_PHONE, "");
 
         if(!TextUtils.isEmpty(mNumberToSendFrom))
@@ -220,27 +232,16 @@ public class MainActivity extends AppCompatActivity implements Observer
             showRequestPermissionsInfoAlertDialog();
         }
 
+        mDateRangePreference = mSharedPreferences.getString(PREF_USER_DATE_RANGE, "Month");
 
-        Date currentTime = Calendar.getInstance().getTime();
+        // will populate mFromDate and mToDate based on preference view in shared preferences
+        setFromAndToDatesBasedOnDateRangePreference(mDateRangePreference);
 
-        String today = sdf.format(currentTime);
-        String tomorrow = sdf.format(currentTime.getTime() + one_day);
-
-        try
-        {
-            mFromDate = sdf.parse(today);
-            mToDate = sdf.parse(tomorrow);
-        }
-        catch(ParseException e)
-        {
-            e.printStackTrace();
-        }
-
-        populatePage(mFromDate, mToDate);
-
+        // populate page views based on date range in shared prefs
+        populatePageViews(mFromDate, mToDate);
     }
 
-    private void populatePage(Date fromDate, Date toDate)
+    private void populatePageViews(Date fromDate, Date toDate)
     {
         // reset the accounts
         mMainAccount.clear();
@@ -302,8 +303,10 @@ public class MainActivity extends AppCompatActivity implements Observer
         mNoneTextView.setVisibility(View.GONE);
 
         // set the views
-        mDayTextView.setText(sdf.format(fromDate));
+        mDayTextView.setText("from " + DATE_FORMAT.format(fromDate) + " to " + DATE_FORMAT.format(toDate));
 
+        // TODO: instead of fetching the SMSs between the 2 dates every time, we should fetch ALL the SMSs once and add the transactions (alongside manual transactions) to a database,
+        // TODO:    then the app would fetch these transactions as needed depending on date. Every app resume or app launch should detect last sms fetched and fetch only new ones to add to the database.
         // get the list of sms between 2 dates
         List<Sms> smsList = new ArrayList<>();
 
@@ -333,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements Observer
         mAccountBalanceTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(mMainAccount.getBalance().intValue()) + " " + mMainAccount.getCurrency().toString());
 
         // fill in the transactions by category
-        populateCategories();
+        populateCategoriesViews();
 
         // match transfers to eliminate transfers within account
         matchTransfers();
@@ -349,7 +352,75 @@ public class MainActivity extends AppCompatActivity implements Observer
         mMainChartsTabs.getTabAt(1).setText(getResources().getString(R.string.income_title));
     }
 
-    private void populateCategories()
+    private void setFromAndToDatesBasedOnDateRangePreference(String dateRangePreference)
+    {
+        try
+        {
+            Calendar cal = Calendar.getInstance();
+
+            switch(dateRangePreference)
+            {
+                case "Day":
+                    // from date : today's date
+                    mFromDate = DATE_FORMAT.parse(DATE_FORMAT.format(cal.getTime()));
+
+                    // to date : tomorrow's date
+                    cal.add(Calendar.DATE, +1);
+                    mToDate = DATE_FORMAT.parse(DATE_FORMAT.format(cal.getTime()));
+                    break;
+
+                case "Week":
+                    // from date : first day of this week
+                    cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+                    mFromDate = DATE_FORMAT.parse(DATE_FORMAT.format(cal.getTime()));
+
+                    // to date : first day of next week
+                    cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+                    cal.add(Calendar.WEEK_OF_YEAR, +1);
+                    mToDate = DATE_FORMAT.parse(DATE_FORMAT.format(cal.getTime()));
+                    break;
+
+                case "Month":
+                    // from date : first day of this month
+                    cal.set(Calendar.DAY_OF_MONTH, 1);
+                    mFromDate = DATE_FORMAT.parse(DATE_FORMAT.format(cal.getTime()));
+
+                    // to date : first day of next month
+                    cal.set(Calendar.DAY_OF_MONTH, 1);
+                    cal.add(Calendar.MONTH, +1);
+                    mToDate = DATE_FORMAT.parse(DATE_FORMAT.format(cal.getTime()));
+                    break;
+
+                case "Year":
+                    // from date : first day of this year
+                    cal.set(Calendar.DAY_OF_YEAR, 1);
+                    mFromDate = DATE_FORMAT.parse(DATE_FORMAT.format(cal.getTime()));
+
+                    // to date : first day of next year
+                    cal.set(Calendar.DAY_OF_YEAR, 1);
+                    cal.add(Calendar.YEAR, +1);
+                    mToDate = DATE_FORMAT.parse(DATE_FORMAT.format(cal.getTime()));
+                    break;
+
+                case "All":
+                    mFromDate = new Date(Long.MIN_VALUE);
+                    mToDate = new Date(Long.MAX_VALUE);
+                    break;
+
+                case "Custom": // TODO: custom date behavior
+                    break;
+            }
+
+            mOriginalFromDate = mFromDate;
+            mOriginalToDate = mToDate;
+        }
+        catch(ParseException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void populateCategoriesViews()
     {
         String noneTextView = "";
         String salaryTextView = "";
@@ -380,13 +451,13 @@ public class MainActivity extends AppCompatActivity implements Observer
                 mNoneButton.setVisibility(View.VISIBLE);
                 continue;
             }
+            // TODO: finish the next 3
             if(t.getCategory().compareTo(TransactionCategory.SALARY.toString()) == 0)
             {
                 mAccountSalary.applyTransaction(t);
                 salaryTextView += t.toItemString();
                 continue;
             }
-            // TODO: finish the next 3
             if(t.getCategory().compareTo(TransactionCategory.TRANSFER_IN.toString()) == 0)
             {
                 mAccountTransferIn.applyTransaction(t);
@@ -699,35 +770,16 @@ public class MainActivity extends AppCompatActivity implements Observer
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    protected void onResume()
     {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        super.onResume();
+
+        populatePageViews(mFromDate, mToDate);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if(id == R.id.actions_calendar_range)
-        {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void update(Observable observable, Object data)
-    {
-        Toast.makeText(this, "observed!", Toast.LENGTH_SHORT).show();
-    }
+    // =============================================================================================================================================================
+    // PROTOTYPE SECTION
+    // =============================================================================================================================================================
 
     private boolean hasValidPreConditions()
     {
@@ -759,6 +811,36 @@ public class MainActivity extends AppCompatActivity implements Observer
     }
 
     // =============================================================================================================================================================
+    // OPTIONS MENU
+    // =============================================================================================================================================================
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        // show date range dialog on calendar button
+        if(id == R.id.actions_calendar_range)
+        {
+            DateRangeDialogFragment dialog = new DateRangeDialogFragment();
+            dialog.show(getFragmentManager(), DateRangeDialogFragment.class.getName());
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    // =============================================================================================================================================================
     // CLICK LISTENERS (from xml)
     // =============================================================================================================================================================
 
@@ -772,35 +854,119 @@ public class MainActivity extends AppCompatActivity implements Observer
     {
     }
 
-    // handle clicking on the previous/next day button
-    public void dayButton(View view)
+    // handle clicking on the previous/next/middle date range button
+    public void dateRangeControlClick(View view)
     {
         try
         {
-            if(view.getId() == R.id.previous_day_button)
-            {
-                mFromDate.setTime(mFromDate.getTime() - one_day);
-            }
-            else if(view.getId() == R.id.today_button)
-            {
-                Date currentTime = Calendar.getInstance().getTime();
+            Calendar cal = Calendar.getInstance();
 
-                String today = sdf.format(currentTime);
-                mFromDate = sdf.parse(today);
-            }
-            else if(view.getId() == R.id.next_day_button)
+            switch(mDateRangePreference)
             {
-                mFromDate.setTime(mFromDate.getTime() + one_day);
-            }
+                case "Day":
+                    if(view.getId() == R.id.previous_date_button)
+                    {
+                        mFromDate.setTime(mFromDate.getTime() - ONE_DAY);
+                        mToDate.setTime(mFromDate.getTime() + ONE_DAY);
+                    }
+                    else if(view.getId() == R.id.current_date_button)
+                    {
+                        mFromDate = mOriginalFromDate;
+                        mToDate = mOriginalToDate;
+                    }
+                    else if(view.getId() == R.id.next_date_button)
+                    {
+                        mFromDate.setTime(mFromDate.getTime() + ONE_DAY);
+                        mToDate.setTime(mFromDate.getTime() + ONE_DAY);
+                    }
 
-            mToDate.setTime(mFromDate.getTime() + one_day);
+                    break;
+
+                case "Week":
+                    if(view.getId() == R.id.previous_date_button)
+                    {
+                        mToDate = mFromDate;
+
+                        cal.setTime(mFromDate);
+                        cal.add(Calendar.WEEK_OF_YEAR, -1);
+                        mFromDate = DATE_FORMAT.parse(DATE_FORMAT.format(cal.getTime()));
+                    }
+                    else if(view.getId() == R.id.current_date_button)
+                    {
+                        mFromDate = mOriginalFromDate;
+                        mToDate = mOriginalToDate;
+                    }
+                    else if(view.getId() == R.id.next_date_button)
+                    {
+                        mFromDate = mToDate;
+
+                        cal.setTime(mToDate);
+                        cal.add(Calendar.WEEK_OF_YEAR, +1);
+                        mToDate = DATE_FORMAT.parse(DATE_FORMAT.format(cal.getTime()));
+                    }
+
+                    break;
+
+                case "Month":
+                    if(view.getId() == R.id.previous_date_button)
+                    {
+                        mToDate = mFromDate;
+
+                        cal.setTime(mFromDate);
+                        cal.add(Calendar.MONTH, -1);
+                        mFromDate = DATE_FORMAT.parse(DATE_FORMAT.format(cal.getTime()));
+                    }
+                    else if(view.getId() == R.id.current_date_button)
+                    {
+                        mFromDate = mOriginalFromDate;
+                        mToDate = mOriginalToDate;
+                    }
+                    else if(view.getId() == R.id.next_date_button)
+                    {
+                        mFromDate = mToDate;
+
+                        cal.setTime(mToDate);
+                        cal.add(Calendar.MONTH, +1);
+                        mToDate = DATE_FORMAT.parse(DATE_FORMAT.format(cal.getTime()));
+                    }
+
+                    break;
+
+                case "Year":
+                    if(view.getId() == R.id.previous_date_button)
+                    {
+                        mToDate = mFromDate;
+
+                        cal.setTime(mFromDate);
+                        cal.add(Calendar.YEAR, -1);
+                        mFromDate = DATE_FORMAT.parse(DATE_FORMAT.format(cal.getTime()));
+                    }
+                    else if(view.getId() == R.id.current_date_button)
+                    {
+                        mFromDate = mOriginalFromDate;
+                        mToDate = mOriginalToDate;
+                    }
+                    else if(view.getId() == R.id.next_date_button)
+                    {
+                        mFromDate = mToDate;
+
+                        cal.setTime(mToDate);
+                        cal.add(Calendar.YEAR, +1);
+                        mToDate = DATE_FORMAT.parse(DATE_FORMAT.format(cal.getTime()));
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
         }
         catch(ParseException e)
         {
             e.printStackTrace();
         }
 
-        populatePage(mFromDate, mToDate);
+        populatePageViews(mFromDate, mToDate);
     }
 
     // send sms button click listener that will send the sms provided to the number provided
@@ -821,6 +987,71 @@ public class MainActivity extends AppCompatActivity implements Observer
 
         SmsUtils.sendDebugSms(mPhoneNumberEditText.getText().toString(), mSmsToSendEditText.getText().toString());
         Toast.makeText(getApplicationContext(), R.string.toast_sending_sms, Toast.LENGTH_SHORT).show();
+    }
+
+    // =============================================================================================================================================================
+    // OBSERVER METHODS
+    // =============================================================================================================================================================
+
+    @Override
+    public void update(Observable observable, Object data)
+    {
+        Toast.makeText(this, "observed!", Toast.LENGTH_SHORT).show();
+    }
+
+    // =============================================================================================================================================================
+    // DATE RANGE DIALOG LISTENER METHODS
+    // =============================================================================================================================================================
+
+    @Override
+    public void onItemClickDay(DateRangeDialogFragment dialog)
+    {
+        mSharedPreferences.edit().putString(PREF_USER_DATE_RANGE, "Day").apply();
+        mDateRangePreference = "Day";
+        setFromAndToDatesBasedOnDateRangePreference(mDateRangePreference);
+        populatePageViews(mFromDate, mToDate);
+    }
+
+    @Override
+    public void onItemClickWeek(DateRangeDialogFragment dialog)
+    {
+        mSharedPreferences.edit().putString(PREF_USER_DATE_RANGE, "Week").apply();
+        mDateRangePreference = "Week";
+        setFromAndToDatesBasedOnDateRangePreference(mDateRangePreference);
+        populatePageViews(mFromDate, mToDate);
+    }
+
+    @Override
+    public void onItemClickMonth(DateRangeDialogFragment dialog)
+    {
+        mSharedPreferences.edit().putString(PREF_USER_DATE_RANGE, "Month").apply();
+        mDateRangePreference = "Month";
+        setFromAndToDatesBasedOnDateRangePreference(mDateRangePreference);
+        populatePageViews(mFromDate, mToDate);
+    }
+
+    @Override
+    public void onItemClickYear(DateRangeDialogFragment dialog)
+    {
+        mSharedPreferences.edit().putString(PREF_USER_DATE_RANGE, "Year").apply();
+        mDateRangePreference = "Year";
+        setFromAndToDatesBasedOnDateRangePreference(mDateRangePreference);
+        populatePageViews(mFromDate, mToDate);
+    }
+
+    @Override
+    public void onItemClickAll(DateRangeDialogFragment dialog)
+    {
+        mSharedPreferences.edit().putString(PREF_USER_DATE_RANGE, "All").apply();
+        mDateRangePreference = "All";
+        setFromAndToDatesBasedOnDateRangePreference(mDateRangePreference);
+        populatePageViews(mFromDate, mToDate);
+    }
+
+    @Override
+    public void onItemClickCustom(DateRangeDialogFragment dialog)
+    {
+        //TODO: awaiting final design
     }
 
     // =============================================================================================================================================================

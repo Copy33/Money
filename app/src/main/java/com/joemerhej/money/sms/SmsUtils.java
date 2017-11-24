@@ -114,7 +114,8 @@ public class SmsUtils
                 return transaction;
             }
         }
-        else if(message.contains("has been deducted"))
+        //TODO: get issuer for transfers and deposits (below)
+        else if(message.contains("has been deducted") && !message.contains("payment of your credit card")) //TODO: for now ignoring credit card payments
         {
             // transaction type (depending on start of message)
             transaction.setType(TransactionType.WITHDRAWAL);
