@@ -410,14 +410,15 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
                 case "Custom": // TODO: custom date behavior
                     break;
             }
-
-            mOriginalFromDate = mFromDate;
-            mOriginalToDate = mToDate;
         }
         catch(ParseException e)
         {
             e.printStackTrace();
         }
+
+        // this is where we set the original view dates
+        mOriginalFromDate = new Date(mFromDate.getTime());
+        mOriginalToDate = new Date(mToDate.getTime());
     }
 
     private void populateCategoriesViews()
