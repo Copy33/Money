@@ -13,7 +13,7 @@ import java.util.Date;
 
 public class Transaction
 {
-    private TransactionType mType;
+    private TransactionType mType;      // deposit/withdrawal
     private BigDecimal mAmount;         // always positive
     private Currency mCurrency;
     private Date mDate;

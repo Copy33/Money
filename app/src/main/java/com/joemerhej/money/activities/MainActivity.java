@@ -27,7 +27,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.data.PieEntry;
+import com.joemerhej.money.dialogs.AddTransactionDialogFragment;
 import com.joemerhej.money.dialogs.DateRangeDialogFragment;
+import com.joemerhej.money.transaction.TransactionType;
 import com.joemerhej.money.views.NonSwipeableViewPager;
 import com.joemerhej.money.R;
 import com.joemerhej.money.account.Account;
@@ -51,7 +53,8 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity implements Observer, DateRangeDialogFragment.DateRangeDialogListener
+public class MainActivity extends AppCompatActivity implements Observer, DateRangeDialogFragment.DateRangeDialogListener,
+        AddTransactionDialogFragment.AddTransactionDialogListener
 {
     // log tag
     private static final String TAG = "MainActivity";
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
 
     // general
     private static final int SMS_PERMISSION_CODE = 0;
-    private static boolean MOCK = false;
+    private static boolean MOCK = true;
 
     // =============================================================================================
     // PROTOTYPE SECTION
@@ -225,11 +228,14 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         mOtherTextView = findViewById(R.id.category_other_text_view);
         mNoneTextView = findViewById(R.id.category_none_text_view);
 
-        // ask for permission to access sms
-        if(!hasReadSmsPermission())
+        if(!MOCK)
         {
-            // should always call showRequestPermissionsInfoAlertDialog function and not requestReadSmsPermission directly to give the app dialog first
-            showRequestPermissionsInfoAlertDialog();
+            // ask for permission to access sms
+            if(!hasReadSmsPermission())
+            {
+                // should always call showRequestPermissionsInfoAlertDialog function and not requestReadSmsPermission directly to give the app dialog first
+                showRequestPermissionsInfoAlertDialog();
+            }
         }
 
         mDateRangePreference = mSharedPreferences.getString(PREF_USER_DATE_RANGE, "Month");
@@ -305,32 +311,33 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         // set the views
         mDayTextView.setText("from " + DATE_FORMAT.format(fromDate) + " to " + DATE_FORMAT.format(toDate));
 
-        // TODO: instead of fetching the SMSs between the 2 dates every time, we should fetch ALL the SMSs once and add the transactions (alongside manual transactions) to a database,
-        // TODO:    then the app would fetch these transactions as needed depending on date. Every app resume or app launch should detect last sms fetched and fetch only new ones to add to the database.
-        // get the list of sms between 2 dates
-        List<Sms> smsList = new ArrayList<>();
-
-        smsList = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
-
-        // go through every sms, retrieve transaction, and add it to the account
-        Set<String> set = new HashSet<>();
-
-        for(Sms sms : smsList)
+        if(!MOCK)
         {
-            Transaction transaction = Transaction.from(sms);
-            mMainAccount.applyTransaction(transaction);
+            // TODO: instead of fetching the SMSs between the 2 dates every time, we should fetch ALL the SMSs once and add the transactions (alongside manual transactions) to a database,
+            // TODO:    then the app would fetch these transactions as needed depending on date. Every app resume or app launch should detect last sms fetched and fetch only new ones to add to the database.
+            // get the list of sms between 2 dates
+            List<Sms> smsList = new ArrayList<>();
 
-            if(transaction != null)
+            smsList = SmsUtils.getAllSms(this, "EmiratesNBD", fromDate, toDate);
+
+            // go through every sms, retrieve transaction, and add it to the account
+            Set<String> set = new HashSet<>();
+
+            for(Sms sms : smsList)
             {
-                set.add(transaction.getIssuer());
+                Transaction transaction = Transaction.from(sms);
+                mMainAccount.applyTransaction(transaction);
+
+                if(transaction != null)
+                {
+                    set.add(transaction.getIssuer());
+                }
             }
         }
-
-        Log.d(TAG, "bla");
-
-        // mock data if needed
-        if(MOCK)
+        else
+        {
             mMainAccount.mock();
+        }
 
         // set up main account balance
         mAccountBalanceTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(mMainAccount.getBalance().intValue()) + " " + mMainAccount.getCurrency().toString());
@@ -779,39 +786,6 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
     }
 
     // =============================================================================================================================================================
-    // PROTOTYPE SECTION
-    // =============================================================================================================================================================
-
-    private boolean hasValidPreConditions()
-    {
-        if(!SmsUtils.isValidPhoneNumber(mPhoneNumberEditText.getText().toString()))
-        {
-            Toast.makeText(getApplicationContext(), R.string.error_invalid_phone_number, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if(!hasReadSmsPermission())
-        {
-            showRequestPermissionsInfoAlertDialog();
-            return false;
-        }
-
-        return true;
-    }
-
-    //Checks if stored SharedPreferences value needs updating and updates it
-    private void checkAndUpdateUserPrefNumber()
-    {
-        if(TextUtils.isEmpty(mNumberToSendFrom) && !mNumberToSendFrom.equals(mPhoneNumberEditText.getText().toString()))
-        {
-            mSharedPreferences
-                    .edit()
-                    .putString(PREF_USER_MOBILE_PHONE, mPhoneNumberEditText.getText().toString())
-                    .apply();
-        }
-    }
-
-    // =============================================================================================================================================================
     // OPTIONS MENU
     // =============================================================================================================================================================
 
@@ -845,9 +819,12 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
     // CLICK LISTENERS (from xml)
     // =============================================================================================================================================================
 
-    // handling clicking the category buttons
+    // clicking category buttons will add transactions manually
     public void onCategoryButtonClick(View view)
     {
+        AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("Add a new transaction", TransactionType.WITHDRAWAL.toString(),
+                                                                                        TransactionCategory.RENT.toString(), mMainAccount.getCurrency().toString());
+        dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
     }
 
     // handling clicking the category transaction list buttons
@@ -991,13 +968,13 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
     }
 
     // =============================================================================================================================================================
-    // OBSERVER METHODS
+    // ADD TRANSACTION DIALOG LISTENER METHODS
     // =============================================================================================================================================================
 
     @Override
-    public void update(Observable observable, Object data)
+    public void onAddClick(AddTransactionDialogFragment dialog)
     {
-        Toast.makeText(this, "observed!", Toast.LENGTH_SHORT).show();
+        mMainAccount.applyTransaction(dialog.getTransaction());
     }
 
     // =============================================================================================================================================================
@@ -1053,6 +1030,49 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
     public void onItemClickCustom(DateRangeDialogFragment dialog)
     {
         //TODO: awaiting final design
+    }
+
+    // =============================================================================================================================================================
+    // PROTOTYPE SECTION
+    // =============================================================================================================================================================
+
+    private boolean hasValidPreConditions()
+    {
+        if(!SmsUtils.isValidPhoneNumber(mPhoneNumberEditText.getText().toString()))
+        {
+            Toast.makeText(getApplicationContext(), R.string.error_invalid_phone_number, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if(!hasReadSmsPermission())
+        {
+            showRequestPermissionsInfoAlertDialog();
+            return false;
+        }
+
+        return true;
+    }
+
+    //Checks if stored SharedPreferences value needs updating and updates it
+    private void checkAndUpdateUserPrefNumber()
+    {
+        if(TextUtils.isEmpty(mNumberToSendFrom) && !mNumberToSendFrom.equals(mPhoneNumberEditText.getText().toString()))
+        {
+            mSharedPreferences
+                    .edit()
+                    .putString(PREF_USER_MOBILE_PHONE, mPhoneNumberEditText.getText().toString())
+                    .apply();
+        }
+    }
+
+    // =============================================================================================================================================================
+    // OBSERVER METHODS
+    // =============================================================================================================================================================
+
+    @Override
+    public void update(Observable observable, Object data)
+    {
+        Toast.makeText(this, "observed!", Toast.LENGTH_SHORT).show();
     }
 
     // =============================================================================================================================================================

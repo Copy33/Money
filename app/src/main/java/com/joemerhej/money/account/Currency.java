@@ -20,4 +20,14 @@ public enum Currency
     {
         return mValue;
     }
+
+    public static Currency fromString(String text)
+    {
+        for(Currency c : Currency.values())
+        {
+            if(c.mValue.equalsIgnoreCase(text))
+                return c;
+        }
+        throw new IllegalArgumentException("No constant with text " + text + " found");
+    }
 }

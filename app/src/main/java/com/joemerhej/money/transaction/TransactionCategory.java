@@ -39,4 +39,14 @@ public enum TransactionCategory
     {
         return mValue;
     }
+
+    public static TransactionCategory fromString(String text)
+    {
+        for(TransactionCategory c : TransactionCategory.values())
+        {
+            if(c.mValue.equalsIgnoreCase(text))
+                return c;
+        }
+        throw new IllegalArgumentException("No constant with text " + text + " found");
+    }
 }

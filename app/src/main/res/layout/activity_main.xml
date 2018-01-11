@@ -238,13 +238,12 @@
                 android:drawableStart="@drawable/ic_alert_circle_outline_white_24dp"
                 android:onClick="onCategoryButtonClick"/>
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingTop="30dp"
-                android:text=""
-                android:visibility="gone"/>
+                />
 
             <Button
                 android:id="@+id/category_rent_button_list"
@@ -256,14 +255,14 @@
                 android:text="Rent"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:visibility="gone"/>
+                />
 
             <TextView
                 android:id="@+id/category_rent_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"/>
+                />
 
             <Button
                 android:id="@+id/category_transport_button_list"
@@ -275,14 +274,14 @@
                 android:text="Transport"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:visibility="gone"/>
+                />
 
             <TextView
                 android:id="@+id/category_transport_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"/>
+                />
 
             <Button
                 android:id="@+id/category_bills_button_list"
@@ -294,14 +293,14 @@
                 android:text="Bills"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:visibility="gone"/>
+                />
 
             <TextView
                 android:id="@+id/category_bills_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"/>
+                />
 
             <Button
                 android:id="@+id/category_entertainment_button_list"
@@ -313,14 +312,14 @@
                 android:text="Entertainment"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:visibility="gone"/>
+                />
 
             <TextView
                 android:id="@+id/category_entertainment_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"/>
+                />
 
             <Button
                 android:id="@+id/category_transfer_out_button_list"
@@ -332,14 +331,14 @@
                 android:text="Transfer"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:visibility="gone"/>
+                />
 
             <TextView
                 android:id="@+id/category_transfer_out_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"/>
+                />
 
             <Button
                 android:id="@+id/category_shopping_button_list"
@@ -351,14 +350,14 @@
                 android:text="Shopping"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:visibility="gone"/>
+                />
 
             <TextView
                 android:id="@+id/category_shopping_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"/>
+                />
 
             <Button
                 android:id="@+id/category_food_button_list"
@@ -370,14 +369,14 @@
                 android:text="Food"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:visibility="gone"/>
+                />
 
             <TextView
                 android:id="@+id/category_food_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"/>
+                />
 
             <Button
                 android:id="@+id/category_groceries_button_list"
@@ -389,14 +388,14 @@
                 android:text="Groceries"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:visibility="gone"/>
+                />
 
             <TextView
                 android:id="@+id/category_groceries_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"/>
+                />
 
             <Button
                 android:id="@+id/category_care_button_list"
@@ -408,14 +407,14 @@
                 android:text="Personal Care"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:visibility="gone"/>
+                />
 
             <TextView
                 android:id="@+id/category_care_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"/>
+                />
 
             <Button
                 android:id="@+id/category_sports_button_list"
@@ -427,14 +426,14 @@
                 android:text="Sports"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:visibility="gone"/>
+                />
 
             <TextView
                 android:id="@+id/category_sports_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"/>
+                />
 
             <Button
                 android:id="@+id/category_health_button_list"
@@ -446,14 +445,14 @@
                 android:text="Health"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:visibility="gone"/>
+                />
 
             <TextView
                 android:id="@+id/category_health_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"/>
+                />
 
             <Button
                 android:id="@+id/category_pets_button_list"
@@ -465,14 +464,14 @@
                 android:text="Pets"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:visibility="gone"/>
+                />
 
             <TextView
                 android:id="@+id/category_pets_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"/>
+                />
 
             <Button
                 android:id="@+id/category_travel_button_list"
@@ -484,14 +483,14 @@
                 android:text="Travel"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:visibility="gone"/>
+                />
 
             <TextView
                 android:id="@+id/category_travel_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"/>
+                />
 
             <Button
                 android:id="@+id/category_other_button_list"
@@ -503,14 +502,14 @@
                 android:text="Other"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:visibility="gone"/>
+                />
 
             <TextView
                 android:id="@+id/category_other_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"/>
+                />
 
             <Button
                 android:id="@+id/category_none_button_list"
@@ -522,14 +521,14 @@
                 android:text="Uncategorized"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:visibility="gone"/>
+                />
 
             <TextView
                 android:id="@+id/category_none_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"/>
+                />
 
 
             <!-- ==================== THIS IS FOR LATER ==================== -->
@@ -550,7 +549,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:visibility="gone">
+                    >
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -568,14 +567,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="SMS to send:"
-                    android:visibility="gone"/>
+                    />
 
                 <EditText
                     android:id="@+id/sms_to_send_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAllCaps="false"
-                    android:visibility="gone"/>
+                    />
 
 
                 <Button
@@ -584,7 +583,7 @@
                     android:layout_height="wrap_content"
                     android:onClick="SendSms"
                     android:text="Send SMS"
-                    android:visibility="gone"/>
+                    />
 
             </LinearLayout>
 
