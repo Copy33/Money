@@ -7,9 +7,11 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.joemerhej.money.R;
@@ -21,7 +23,10 @@ import com.joemerhej.money.transaction.TransactionType;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.IllegalFormatException;
+import java.util.Locale;
 
 /**
  * Created by Joe Merhej on 11/24/17.
@@ -94,6 +99,21 @@ public class AddTransactionDialogFragment extends DialogFragment
         mDateEditText = v.findViewById(R.id.dialog_add_transaction_date_edit_text);
         mDescriptionEditText = v.findViewById(R.id.dialog_add_transaction_description_edit_text);
 
+        Calendar cal = Calendar.getInstance();
+
+        // auto-populate today's date
+        try
+        {
+            final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyy", Locale.US);
+            Date today = DATE_FORMAT.parse(DATE_FORMAT.format(cal.getTime()));
+            mDateEditText.setText(DATE_FORMAT.format(today));
+        }
+        catch(ParseException e)
+        {
+            e.printStackTrace();
+        }
+
+
         builder.setTitle(title)
                .setView(v)
                .setPositiveButton("Add", new DialogInterface.OnClickListener()
@@ -124,7 +144,18 @@ public class AddTransactionDialogFragment extends DialogFragment
                    }
                });
 
-        return builder.create();
+        mAmountEditText.requestFocus();
+
+        AlertDialog d = builder.create();
+        d.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+        return d;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
+
     }
 
     public Transaction getTransaction()

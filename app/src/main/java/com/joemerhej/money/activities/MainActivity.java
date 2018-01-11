@@ -237,6 +237,10 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
                 showRequestPermissionsInfoAlertDialog();
             }
         }
+        else
+        {
+            mMainAccount.mock();
+        }
 
         mDateRangePreference = mSharedPreferences.getString(PREF_USER_DATE_RANGE, "Month");
 
@@ -250,7 +254,6 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
     private void populatePageViews(Date fromDate, Date toDate)
     {
         // reset the accounts
-        mMainAccount.clear();
         mAccountSalary.clear();
         mAccountTransferIn.clear();
         mAccountCash.clear();
@@ -333,10 +336,6 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
                     set.add(transaction.getIssuer());
                 }
             }
-        }
-        else
-        {
-            mMainAccount.mock();
         }
 
         // set up main account balance
@@ -822,9 +821,111 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
     // clicking category buttons will add transactions manually
     public void onCategoryButtonClick(View view)
     {
-        AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("Add a new transaction", TransactionType.WITHDRAWAL.toString(),
-                                                                                        TransactionCategory.RENT.toString(), mMainAccount.getCurrency().toString());
-        dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
+        if(view.getId() == R.id.category_rent_button)
+        {
+            String transactionString = TransactionCategory.RENT.toString();
+            AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
+                    transactionString, mMainAccount.getCurrency().toString());
+            dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
+        }
+        else if(view.getId() == R.id.category_transport_button)
+        {
+            String transactionString = TransactionCategory.TRANSPORT.toString();
+            AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
+                    transactionString, mMainAccount.getCurrency().toString());
+            dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
+        }
+        else if(view.getId() == R.id.category_bills_button)
+        {
+            String transactionString = TransactionCategory.BILLS.toString();
+            AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
+                    transactionString, mMainAccount.getCurrency().toString());
+            dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
+        }
+        else if(view.getId() == R.id.category_entertainment_button)
+        {
+            String transactionString = TransactionCategory.ENTERTAINMENT.toString();
+            AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
+                    transactionString, mMainAccount.getCurrency().toString());
+            dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
+        }
+        else if(view.getId() == R.id.category_transfer_out_button)
+        {
+            String transactionString = TransactionCategory.TRANSFER_OUT.toString();
+            AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
+                    transactionString, mMainAccount.getCurrency().toString());
+            dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
+        }
+        else if(view.getId() == R.id.category_shopping_button)
+        {
+            String transactionString = TransactionCategory.SHOPPING.toString();
+            AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
+                    transactionString, mMainAccount.getCurrency().toString());
+            dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
+        }
+        else if(view.getId() == R.id.category_food_button)
+        {
+            String transactionString = TransactionCategory.FOOD.toString();
+            AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
+                    transactionString, mMainAccount.getCurrency().toString());
+            dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
+        }
+        else if(view.getId() == R.id.category_groceries_button)
+        {
+            String transactionString = TransactionCategory.GROCERIES.toString();
+            AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
+                    transactionString, mMainAccount.getCurrency().toString());
+            dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
+        }
+        else if(view.getId() == R.id.category_care_button)
+        {
+            String transactionString = TransactionCategory.CARE.toString();
+            AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
+                    transactionString, mMainAccount.getCurrency().toString());
+            dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
+        }
+        else if(view.getId() == R.id.category_sports_button)
+        {
+            String transactionString = TransactionCategory.SPORTS.toString();
+            AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
+                    transactionString, mMainAccount.getCurrency().toString());
+            dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
+        }
+        else if(view.getId() == R.id.category_health_button)
+        {
+            String transactionString = TransactionCategory.HEALTH.toString();
+            AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
+                    transactionString, mMainAccount.getCurrency().toString());
+            dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
+        }
+        else if(view.getId() == R.id.category_pets_button)
+        {
+            String transactionString = TransactionCategory.PETS.toString();
+            AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
+                    transactionString, mMainAccount.getCurrency().toString());
+            dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
+        }
+        else if(view.getId() == R.id.category_travel_button)
+        {
+            String transactionString = TransactionCategory.TRAVEL.toString();
+            AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
+                    transactionString, mMainAccount.getCurrency().toString());
+            dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
+        }
+        else if(view.getId() == R.id.category_other_button)
+        {
+            String transactionString = TransactionCategory.OTHER.toString();
+            AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
+                    transactionString, mMainAccount.getCurrency().toString());
+            dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
+        }
+        else if(view.getId() == R.id.category_none_button)
+        {
+            String transactionString = TransactionCategory.NONE.toString();
+            AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
+                    transactionString, mMainAccount.getCurrency().toString());
+            dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
+        }
     }
 
     // handling clicking the category transaction list buttons
@@ -975,6 +1076,7 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
     public void onAddClick(AddTransactionDialogFragment dialog)
     {
         mMainAccount.applyTransaction(dialog.getTransaction());
+        populatePageViews(mFromDate, mToDate);
     }
 
     // =============================================================================================================================================================
