@@ -63,14 +63,11 @@ public class MainChartSpendingFragment extends Fragment
 
         mSpendingChart.getDescription().setEnabled(false);
         mSpendingChart.setExtraOffsets(35, 40, 35, 40);
-        mSpendingChart.setDragDecelerationFrictionCoef(0.5f);
-        mSpendingChart.setRotationEnabled(true);
         mSpendingChart.setTransparentCircleColor(Color.rgb(105, 105, 105));
         mSpendingChart.setTransparentCircleRadius(65);
         mSpendingChart.setHoleRadius(55);
         mSpendingChart.setEntryLabelColor(Color.BLACK);
-
-        mSpendingChart.animateY(1000, Easing.EasingOption.EaseInOutCubic);
+        mSpendingChart.setTouchEnabled(false);
 
         PieDataSet dataSet = new PieDataSet(entries, "Categories");
 
@@ -81,7 +78,6 @@ public class MainChartSpendingFragment extends Fragment
         dataSet.setValueLineColor(Color.BLACK);
         dataSet.setValueLinePart1Length(0.8f);
         dataSet.setValueLinePart2Length(0.4f);
-        dataSet.setHighlightEnabled(true);
 
         mSpendingChart.getLegend().setEnabled(false);
 

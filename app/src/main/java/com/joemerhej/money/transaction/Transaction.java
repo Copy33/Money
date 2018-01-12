@@ -83,6 +83,7 @@ public class Transaction
 
     public String toItemString()
     {
+        // TODO: change that intValue to properly format BigDecimal
         return mAmount.intValue() + " " + mCurrency.toString().toUpperCase() + " -- " + mIssuer.toUpperCase() +"\n";
     }
 

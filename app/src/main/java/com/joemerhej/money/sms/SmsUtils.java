@@ -77,7 +77,7 @@ public class SmsUtils
                 transaction.setAmount(new BigDecimal(firstNumber.replaceAll(",", "")));
 
                 // transaction currency (between first "of" and first number)
-                transaction.setCurrency(Currency.valueOf(message.substring(message.indexOf("of") + 2, message.indexOf(firstNumber)).trim().toUpperCase()));
+                transaction.setCurrency(Currency.fromString(message.substring(message.indexOf("of") + 2, message.indexOf(firstNumber)).trim().toUpperCase()));
 
                 // transaction issuer (between first "to" and first "with"
                 transaction.setIssuer(message.substring(message.indexOf("to") + 2, message.indexOf("with")).trim());
@@ -103,7 +103,7 @@ public class SmsUtils
                 transaction.setAmount(new BigDecimal(firstNumber.replaceAll(",", "")));
 
                 // transaction currency (between first "of" and first number)
-                transaction.setCurrency(Currency.valueOf(message.substring(message.indexOf("of") + 2, message.indexOf(firstNumber)).trim().toUpperCase()));
+                transaction.setCurrency(Currency.fromString(message.substring(message.indexOf("of") + 2, message.indexOf(firstNumber)).trim().toUpperCase()));
 
                 // transaction issuer (between first "at" and "Limit is {currency}"
                 transaction.setIssuer(message.substring(message.indexOf("at") + 2, message.indexOf("limit is " + transaction.getCurrency().toString())).trim());
@@ -130,7 +130,7 @@ public class SmsUtils
                 transaction.setAmount(new BigDecimal(firstNumber.replaceAll(",", "")));
 
                 // transaction currency (between 0 and first number)
-                transaction.setCurrency(Currency.valueOf(message.substring(0, message.indexOf(firstNumber)).trim().toUpperCase()));
+                transaction.setCurrency(Currency.fromString(message.substring(0, message.indexOf(firstNumber)).trim().toUpperCase()));
 
                 // category transfer out
                 transaction.setCategory(TransactionCategory.TRANSFER_OUT.toString());
@@ -138,7 +138,7 @@ public class SmsUtils
                 return transaction;
             }
         }
-        else if(message.contains("has been credited"))
+        else if(message.contains("has been credited") || message.contains("has been received") || message.contains("has been debited"))
         {
             // transaction type (depending on start of message)
             transaction.setType(TransactionType.DEPOSIT);
@@ -153,9 +153,9 @@ public class SmsUtils
                 transaction.setAmount(new BigDecimal(firstNumber.replaceAll(",", "")));
 
                 // transaction currency (between 0 and first number)
-                transaction.setCurrency(Currency.valueOf(message.substring(0, message.indexOf(firstNumber)).trim().toUpperCase()));
+                transaction.setCurrency(Currency.fromString(message.substring(0, message.indexOf(firstNumber)).trim().toUpperCase()));
 
-                if(message.contains("mepay"))
+                if(message.contains("mepay") || message.contains("transfer"))
                     transaction.setCategory(TransactionCategory.TRANSFER_IN.toString());
                 else
                     transaction.setCategory(TransactionCategory.SALARY.toString());
@@ -178,7 +178,7 @@ public class SmsUtils
                 transaction.setAmount(new BigDecimal(firstNumber.replaceAll(",", "")));
 
                 // transaction currency (between 0 and first number)
-                transaction.setCurrency(Currency.valueOf(message.substring(0, message.indexOf(firstNumber)).trim().toUpperCase()));
+                transaction.setCurrency(Currency.fromString(message.substring(0, message.indexOf(firstNumber)).trim().toUpperCase()));
 
                 // category transfer in
                 transaction.setCategory(TransactionCategory.TRANSFER_IN.toString());

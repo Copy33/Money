@@ -6,7 +6,8 @@ package com.joemerhej.money.account;
 
 public enum Currency
 {
-    AED("aed");
+    AED("aed"),
+    USD("usd");
 
     private final String mValue;
 

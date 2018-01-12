@@ -61,14 +61,11 @@ public class MainChartIncomeFragment extends Fragment
 
         mIncomeChart.getDescription().setEnabled(false);
         mIncomeChart.setExtraOffsets(35, 40, 35, 40);
-        mIncomeChart.setDragDecelerationFrictionCoef(0.5f);
-        mIncomeChart.setRotationEnabled(true);
         mIncomeChart.setTransparentCircleColor(Color.rgb(105, 105, 105));
         mIncomeChart.setTransparentCircleRadius(65);
         mIncomeChart.setHoleRadius(55);
         mIncomeChart.setEntryLabelColor(Color.BLACK);
-
-        mIncomeChart.animateY(1000, Easing.EasingOption.EaseInOutCubic);
+        mIncomeChart.setTouchEnabled(false);
 
         PieDataSet dataSet = new PieDataSet(entries, "Categories");
 
@@ -79,7 +76,6 @@ public class MainChartIncomeFragment extends Fragment
         dataSet.setValueLineColor(Color.BLACK);
         dataSet.setValueLinePart1Length(0.8f);
         dataSet.setValueLinePart2Length(0.4f);
-        dataSet.setHighlightEnabled(true);
 
         mIncomeChart.getLegend().setEnabled(false);
 

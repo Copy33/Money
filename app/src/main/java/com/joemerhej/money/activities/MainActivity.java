@@ -14,6 +14,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -27,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.data.PieEntry;
+import com.joemerhej.money.adapters.TransactionListAdapter;
 import com.joemerhej.money.dialogs.AddTransactionDialogFragment;
 import com.joemerhej.money.dialogs.DateRangeDialogFragment;
 import com.joemerhej.money.transaction.TransactionType;
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
     private ArrayList<PieEntry> mIncomeEntries = new ArrayList<>();
     private ArrayList<Integer> mIncomeColors = new ArrayList<>();
 
-    // views : categories
+    // views : categories buttons
     private Button mRentButton;
     private Button mTransferOutButton;
     private Button mTransportButton;
@@ -117,21 +120,39 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
     private Button mPetsButton;
     private Button mOtherButton;
     private Button mNoneButton;
-    private TextView mRentTextView;
-    private TextView mTransferOutTextView;
-    private TextView mTransportTextView;
-    private TextView mEntertainmentTextView;
-    private TextView mFoodTextView;
-    private TextView mBillsTextView;
-    private TextView mTravelTextView;
-    private TextView mShoppingTextView;
-    private TextView mGroceriesTextView;
-    private TextView mCareTextView;
-    private TextView mSportsTextView;
-    private TextView mHealthTextView;
-    private TextView mPetsTextView;
-    private TextView mOtherTextView;
-    private TextView mNoneTextView;
+
+    // views : categories transactions lists (recycler views / adapters)
+    private RecyclerView mRentRecyclerView;
+    private RecyclerView mTransferOutRecyclerView;
+    private RecyclerView mTransportRecyclerView;
+    private RecyclerView mEntertainmentRecyclerView;
+    private RecyclerView mFoodRecyclerView;
+    private RecyclerView mBillsRecyclerView;
+    private RecyclerView mTravelRecyclerView;
+    private RecyclerView mShoppingRecyclerView;
+    private RecyclerView mGroceriesRecyclerView;
+    private RecyclerView mCareRecyclerView;
+    private RecyclerView mSportsRecyclerView;
+    private RecyclerView mHealthRecyclerView;
+    private RecyclerView mPetsRecyclerView;
+    private RecyclerView mOtherRecyclerView;
+    private RecyclerView mNoneRecyclerView;
+
+    private TransactionListAdapter mRentTransactionListAdapter;
+    private TransactionListAdapter mTransferOutTransactionListAdapter;
+    private TransactionListAdapter mTransportTransactionListAdapter;
+    private TransactionListAdapter mEntertainmentTransactionListAdapter;
+    private TransactionListAdapter mFoodTransactionListAdapter;
+    private TransactionListAdapter mBillsTransactionListAdapter;
+    private TransactionListAdapter mTravelTransactionListAdapter;
+    private TransactionListAdapter mShoppingTransactionListAdapter;
+    private TransactionListAdapter mGroceriesTransactionListAdapter;
+    private TransactionListAdapter mCareTransactionListAdapter;
+    private TransactionListAdapter mSportsTransactionListAdapter;
+    private TransactionListAdapter mHealthTransactionListAdapter;
+    private TransactionListAdapter mPetsTransactionListAdapter;
+    private TransactionListAdapter mOtherTransactionListAdapter;
+    private TransactionListAdapter mNoneTransactionListAdapter;
 
     // data : accounts
     private Account mMainAccount = new Account();
@@ -155,6 +176,22 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
     private Account mAccountPersonalCare = new Account();
     private Account mAccountOther = new Account();
     private Account mAccountNone = new Account();
+
+    // data : manual transactions
+    private Account mModifiedAccount = new Account();
+    private Button mModifiedAccountButton;
+    private TransactionListAdapter mModifiedAccountAdapter;
+
+    // listeners : transaction item click
+    private TransactionListAdapter.TransactionClickListener mTransactionClickListener = new TransactionListAdapter.TransactionClickListener()
+    {
+        @Override
+        public void onTransactionClick(View view, int position)
+        {
+            // TODO: this does nothing for now.
+            Log.d(TAG, "Clicked item # " + position);
+        }
+    };
 
 
     @Override
@@ -212,21 +249,21 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         mOtherButton = findViewById(R.id.category_other_button_list);
         mNoneButton = findViewById(R.id.category_none_button_list);
 
-        mRentTextView = findViewById(R.id.category_rent_text_view);
-        mTransferOutTextView = findViewById(R.id.category_transfer_out_text_view);
-        mTransportTextView = findViewById(R.id.category_transport_text_view);
-        mEntertainmentTextView = findViewById(R.id.category_entertainment_text_view);
-        mFoodTextView = findViewById(R.id.category_food_text_view);
-        mBillsTextView = findViewById(R.id.category_bills_text_view);
-        mTravelTextView = findViewById(R.id.category_travel_text_view);
-        mShoppingTextView = findViewById(R.id.category_shopping_text_view);
-        mGroceriesTextView = findViewById(R.id.category_groceries_text_view);
-        mCareTextView = findViewById(R.id.category_care_text_view);
-        mSportsTextView = findViewById(R.id.category_sports_text_view);
-        mHealthTextView = findViewById(R.id.category_health_text_view);
-        mPetsTextView = findViewById(R.id.category_pets_text_view);
-        mOtherTextView = findViewById(R.id.category_other_text_view);
-        mNoneTextView = findViewById(R.id.category_none_text_view);
+        mRentRecyclerView = findViewById(R.id.category_rent_transaction_list);
+        mTransferOutRecyclerView = findViewById(R.id.category_transfer_out_transaction_list);
+        mTransportRecyclerView = findViewById(R.id.category_transport_transaction_list);
+        mEntertainmentRecyclerView = findViewById(R.id.category_entertainment_transaction_list);
+        mFoodRecyclerView = findViewById(R.id.category_food_transaction_list);
+        mBillsRecyclerView = findViewById(R.id.category_bills_transaction_list);
+        mTravelRecyclerView = findViewById(R.id.category_travel_transaction_list);
+        mShoppingRecyclerView = findViewById(R.id.category_shopping_transaction_list);
+        mGroceriesRecyclerView = findViewById(R.id.category_groceries_transaction_list);
+        mCareRecyclerView = findViewById(R.id.category_care_transaction_list);
+        mSportsRecyclerView = findViewById(R.id.category_sports_transaction_list);
+        mHealthRecyclerView = findViewById(R.id.category_health_transaction_list);
+        mPetsRecyclerView = findViewById(R.id.category_pets_transaction_list);
+        mOtherRecyclerView = findViewById(R.id.category_other_transaction_list);
+        mNoneRecyclerView = findViewById(R.id.category_none_transaction_list);
 
         if(!MOCK)
         {
@@ -249,6 +286,70 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
 
         // populate page views based on date range in shared prefs
         populatePageViews(mFromDate, mToDate);
+
+        mRentTransactionListAdapter = new TransactionListAdapter(mAccountRent.getTransactions());
+        mTransferOutTransactionListAdapter = new TransactionListAdapter(mAccountTransferOut.getTransactions());
+        mTransportTransactionListAdapter = new TransactionListAdapter(mAccountTransport.getTransactions());
+        mEntertainmentTransactionListAdapter = new TransactionListAdapter(mAccountEntertainment.getTransactions());
+        mFoodTransactionListAdapter = new TransactionListAdapter(mAccountFood.getTransactions());
+        mBillsTransactionListAdapter = new TransactionListAdapter(mAccountBills.getTransactions());
+        mTravelTransactionListAdapter = new TransactionListAdapter(mAccountTravel.getTransactions());
+        mShoppingTransactionListAdapter = new TransactionListAdapter(mAccountShopping.getTransactions());
+        mGroceriesTransactionListAdapter = new TransactionListAdapter(mAccountGroceries.getTransactions());
+        mCareTransactionListAdapter = new TransactionListAdapter(mAccountPersonalCare.getTransactions());
+        mSportsTransactionListAdapter = new TransactionListAdapter(mAccountSports.getTransactions());
+        mHealthTransactionListAdapter = new TransactionListAdapter(mAccountHealth.getTransactions());
+        mPetsTransactionListAdapter = new TransactionListAdapter(mAccountPets.getTransactions());
+        mOtherTransactionListAdapter = new TransactionListAdapter(mAccountOther.getTransactions());
+        mNoneTransactionListAdapter = new TransactionListAdapter(mAccountNone.getTransactions());
+
+        mRentTransactionListAdapter.setOnTransactionClickListener(mTransactionClickListener);
+        mTransferOutTransactionListAdapter.setOnTransactionClickListener(mTransactionClickListener);
+        mTransportTransactionListAdapter.setOnTransactionClickListener(mTransactionClickListener);
+        mEntertainmentTransactionListAdapter.setOnTransactionClickListener(mTransactionClickListener);
+        mFoodTransactionListAdapter.setOnTransactionClickListener(mTransactionClickListener);
+        mBillsTransactionListAdapter.setOnTransactionClickListener(mTransactionClickListener);
+        mTravelTransactionListAdapter.setOnTransactionClickListener(mTransactionClickListener);
+        mShoppingTransactionListAdapter.setOnTransactionClickListener(mTransactionClickListener);
+        mGroceriesTransactionListAdapter.setOnTransactionClickListener(mTransactionClickListener);
+        mCareTransactionListAdapter.setOnTransactionClickListener(mTransactionClickListener);
+        mSportsTransactionListAdapter.setOnTransactionClickListener(mTransactionClickListener);
+        mHealthTransactionListAdapter.setOnTransactionClickListener(mTransactionClickListener);
+        mPetsTransactionListAdapter.setOnTransactionClickListener(mTransactionClickListener);
+        mOtherTransactionListAdapter.setOnTransactionClickListener(mTransactionClickListener);
+        mNoneTransactionListAdapter.setOnTransactionClickListener(mTransactionClickListener);
+
+        mRentRecyclerView.setAdapter(mRentTransactionListAdapter);
+        mTransferOutRecyclerView.setAdapter(mTransferOutTransactionListAdapter);
+        mTransportRecyclerView.setAdapter(mTransportTransactionListAdapter);
+        mEntertainmentRecyclerView.setAdapter(mEntertainmentTransactionListAdapter);
+        mFoodRecyclerView.setAdapter(mFoodTransactionListAdapter);
+        mBillsRecyclerView.setAdapter(mBillsTransactionListAdapter);
+        mTravelRecyclerView.setAdapter(mTravelTransactionListAdapter);
+        mShoppingRecyclerView.setAdapter(mShoppingTransactionListAdapter);
+        mGroceriesRecyclerView.setAdapter(mGroceriesTransactionListAdapter);
+        mCareRecyclerView.setAdapter(mCareTransactionListAdapter);
+        mSportsRecyclerView.setAdapter(mSportsTransactionListAdapter);
+        mHealthRecyclerView.setAdapter(mHealthTransactionListAdapter);
+        mPetsRecyclerView.setAdapter(mPetsTransactionListAdapter);
+        mOtherRecyclerView.setAdapter(mOtherTransactionListAdapter);
+        mNoneRecyclerView.setAdapter(mNoneTransactionListAdapter);
+
+        mRentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mTransferOutRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mTransportRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mEntertainmentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mFoodRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mBillsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mTravelRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mShoppingRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mGroceriesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mCareRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mSportsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mHealthRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mPetsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mOtherRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mNoneRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void populatePageViews(Date fromDate, Date toDate)
@@ -273,6 +374,7 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         mAccountOther.clear();
         mAccountNone.clear();
 
+        // reset the charts
         mSpendingColors.clear();
         mSpendingEntries.clear();
         mIncomeColors.clear();
@@ -295,27 +397,13 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         mOtherButton.setVisibility(View.GONE);
         mNoneButton.setVisibility(View.GONE);
 
-        mRentTextView.setVisibility(View.GONE);
-        mTransferOutTextView.setVisibility(View.GONE);
-        mTransportTextView.setVisibility(View.GONE);
-        mEntertainmentTextView.setVisibility(View.GONE);
-        mFoodTextView.setVisibility(View.GONE);
-        mBillsTextView.setVisibility(View.GONE);
-        mTravelTextView.setVisibility(View.GONE);
-        mShoppingTextView.setVisibility(View.GONE);
-        mGroceriesTextView.setVisibility(View.GONE);
-        mCareTextView.setVisibility(View.GONE);
-        mSportsTextView.setVisibility(View.GONE);
-        mHealthTextView.setVisibility(View.GONE);
-        mPetsTextView.setVisibility(View.GONE);
-        mOtherTextView.setVisibility(View.GONE);
-        mNoneTextView.setVisibility(View.GONE);
-
         // set the views
         mDayTextView.setText("from " + DATE_FORMAT.format(fromDate) + " to " + DATE_FORMAT.format(toDate));
 
         if(!MOCK)
         {
+            mMainAccount.clear(); // after the to do below we should remove this
+
             // TODO: instead of fetching the SMSs between the 2 dates every time, we should fetch ALL the SMSs once and add the transactions (alongside manual transactions) to a database,
             // TODO:    then the app would fetch these transactions as needed depending on date. Every app resume or app launch should detect last sms fetched and fetch only new ones to add to the database.
             // get the list of sms between 2 dates
@@ -348,14 +436,15 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         matchTransfers();
 
         // set up pie charts
-        setupSpendingChart();
-        setupIncomeChart();
+        setupSpendingChartEntries();
+        setupIncomeChartEntries();
 
         mPagerAdapter = new MainChartsFragmentPagerAdapter(getSupportFragmentManager(), mSpendingEntries, mSpendingColors, mIncomeEntries, mIncomeColors);
         mViewPager.setAdapter(mPagerAdapter);
         mMainChartsTabs.setupWithViewPager(mViewPager);
         mMainChartsTabs.getTabAt(0).setText(getResources().getString(R.string.spending_title));
         mMainChartsTabs.getTabAt(1).setText(getResources().getString(R.string.income_title));
+
     }
 
     private void setFromAndToDatesBasedOnDateRangePreference(String dateRangePreference)
@@ -453,8 +542,6 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
             if(t.getCategory().compareTo(TransactionCategory.NONE.toString()) == 0)
             {
                 mAccountNone.applyTransaction(t);
-                noneTextView += t.toItemString();
-                mNoneTextView.setVisibility(View.VISIBLE);
                 mNoneButton.setVisibility(View.VISIBLE);
                 continue;
             }
@@ -462,149 +549,102 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
             if(t.getCategory().compareTo(TransactionCategory.SALARY.toString()) == 0)
             {
                 mAccountSalary.applyTransaction(t);
-                salaryTextView += t.toItemString();
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.TRANSFER_IN.toString()) == 0)
             {
                 mAccountTransferIn.applyTransaction(t);
-                transferInTextView += t.toItemString();
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.CASH.toString()) == 0)
             {
                 mAccountCash.applyTransaction(t);
-                cashTextView += t.toItemString();
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.TRANSFER_OUT.toString()) == 0)
             {
                 mAccountTransferOut.applyTransaction(t);
-                transferOutTextView += t.toItemString();
-                mTransferOutTextView.setVisibility(View.VISIBLE);
                 mTransferOutButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.RENT.toString()) == 0)
             {
                 mAccountRent.applyTransaction(t);
-                rentTextView += t.toItemString();
-                mRentTextView.setVisibility(View.VISIBLE);
                 mRentButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.BILLS.toString()) == 0)
             {
                 mAccountBills.applyTransaction(t);
-                billsTextView += t.toItemString();
-                mBillsTextView.setVisibility(View.VISIBLE);
                 mBillsButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.GROCERIES.toString()) == 0)
             {
                 mAccountGroceries.applyTransaction(t);
-                groceriesTextView += t.toItemString();
-                mGroceriesTextView.setVisibility(View.VISIBLE);
                 mGroceriesButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.FOOD.toString()) == 0)
             {
                 mAccountFood.applyTransaction(t);
-                foodTextView += t.toItemString();
-                mFoodTextView.setVisibility(View.VISIBLE);
                 mFoodButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.ENTERTAINMENT.toString()) == 0)
             {
                 mAccountEntertainment.applyTransaction(t);
-                entertainmentTextView += t.toItemString();
-                mEntertainmentTextView.setVisibility(View.VISIBLE);
                 mEntertainmentButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.TRANSPORT.toString()) == 0)
             {
                 mAccountTransport.applyTransaction(t);
-                transportTextView += t.toItemString();
-                mTransportTextView.setVisibility(View.VISIBLE);
                 mTransportButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.SPORTS.toString()) == 0)
             {
                 mAccountSports.applyTransaction(t);
-                sportsTextView += t.toItemString();
-                mSportsTextView.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.SHOPPING.toString()) == 0)
             {
                 mAccountShopping.applyTransaction(t);
-                shoppingTextView += t.toItemString();
-                mShoppingTextView.setVisibility(View.VISIBLE);
                 mShoppingButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.HEALTH.toString()) == 0)
             {
                 mAccountHealth.applyTransaction(t);
-                healthTextView += t.toItemString();
-                mHealthTextView.setVisibility(View.VISIBLE);
                 mHealthButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.TRAVEL.toString()) == 0)
             {
                 mAccountTravel.applyTransaction(t);
-                travelTextView += t.toItemString();
-                mTravelTextView.setVisibility(View.VISIBLE);
                 mTravelButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.PETS.toString()) == 0)
             {
                 mAccountPets.applyTransaction(t);
-                petsTextView += t.toItemString();
-                mPetsTextView.setVisibility(View.VISIBLE);
                 mPetsButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.CARE.toString()) == 0)
             {
                 mAccountPersonalCare.applyTransaction(t);
-                careTextView += t.toItemString();
-                mCareTextView.setVisibility(View.VISIBLE);
                 mCareButton.setVisibility(View.VISIBLE);
                 continue;
             }
             if(t.getCategory().compareTo(TransactionCategory.OTHER.toString()) == 0)
             {
                 mAccountOther.applyTransaction(t);
-                otherTextView += t.toItemString();
-                mOtherTextView.setVisibility(View.VISIBLE);
                 mOtherButton.setVisibility(View.VISIBLE);
                 continue;
             }
         }
-
-        mNoneTextView.setText(noneTextView);
-        mTransferOutTextView.setText(transferOutTextView);
-        mRentTextView.setText(rentTextView);
-        mTransportTextView.setText(transportTextView);
-        mEntertainmentTextView.setText(entertainmentTextView);
-        mFoodTextView.setText(foodTextView);
-        mBillsTextView.setText(billsTextView);
-        mTravelTextView.setText(travelTextView);
-        mShoppingTextView.setText(shoppingTextView);
-        mGroceriesTextView.setText(groceriesTextView);
-        mCareTextView.setText(careTextView);
-        mSportsTextView.setText(sportsTextView);
-        mHealthTextView.setText(healthTextView);
-        mPetsTextView.setText(petsTextView);
-        mOtherTextView.setText(otherTextView);
     }
 
     void matchTransfers()
@@ -644,8 +684,11 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         largerListAccount.removeTransactions(toRemoveFromLargerAccount);
     }
 
-    private void setupSpendingChart()
+    private void setupSpendingChartEntries()
     {
+        mSpendingEntries.clear();
+        mSpendingColors.clear();
+
         float labelNumber = mAccountNone.getBalance().abs().floatValue();
         if(Float.compare(labelNumber, 0.0f) != 0)
         {
@@ -752,8 +795,11 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         }
     }
 
-    private void setupIncomeChart()
+    private void setupIncomeChartEntries()
     {
+        mIncomeEntries.clear();
+        mIncomeColors.clear();
+
         float labelNumber = mAccountSalary.getBalance().abs().floatValue();
         if(Float.compare(labelNumber, 0.0f) != 0)
         {
@@ -823,6 +869,12 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
     {
         if(view.getId() == R.id.category_rent_button)
         {
+            // retain the views to refresh later
+            mModifiedAccount = mAccountRent;
+            mModifiedAccountButton = mRentButton;
+            mModifiedAccountAdapter = mRentTransactionListAdapter;
+
+            // initialize and show the dialog
             String transactionString = TransactionCategory.RENT.toString();
             AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
                     transactionString, mMainAccount.getCurrency().toString());
@@ -830,6 +882,12 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         }
         else if(view.getId() == R.id.category_transport_button)
         {
+            // retain the views to refresh later
+            mModifiedAccount = mAccountTransport;
+            mModifiedAccountButton = mTransportButton;
+            mModifiedAccountAdapter = mTransportTransactionListAdapter;
+
+            // initialize and show the dialog
             String transactionString = TransactionCategory.TRANSPORT.toString();
             AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
                     transactionString, mMainAccount.getCurrency().toString());
@@ -837,6 +895,12 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         }
         else if(view.getId() == R.id.category_bills_button)
         {
+            // retain the views to refresh later
+            mModifiedAccount = mAccountBills;
+            mModifiedAccountButton = mBillsButton;
+            mModifiedAccountAdapter = mBillsTransactionListAdapter;
+
+            // initialize and show the dialog
             String transactionString = TransactionCategory.BILLS.toString();
             AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
                     transactionString, mMainAccount.getCurrency().toString());
@@ -844,6 +908,12 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         }
         else if(view.getId() == R.id.category_entertainment_button)
         {
+            // retain the views to refresh later
+            mModifiedAccount = mAccountEntertainment;
+            mModifiedAccountButton = mEntertainmentButton;
+            mModifiedAccountAdapter = mEntertainmentTransactionListAdapter;
+
+            // initialize and show the dialog
             String transactionString = TransactionCategory.ENTERTAINMENT.toString();
             AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
                     transactionString, mMainAccount.getCurrency().toString());
@@ -851,6 +921,12 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         }
         else if(view.getId() == R.id.category_transfer_out_button)
         {
+            // retain the views to refresh later
+            mModifiedAccount = mAccountTransferOut;
+            mModifiedAccountButton = mTransferOutButton;
+            mModifiedAccountAdapter = mTransferOutTransactionListAdapter;
+
+            // initialize and show the dialog
             String transactionString = TransactionCategory.TRANSFER_OUT.toString();
             AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
                     transactionString, mMainAccount.getCurrency().toString());
@@ -858,6 +934,12 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         }
         else if(view.getId() == R.id.category_shopping_button)
         {
+            // retain the views to refresh later
+            mModifiedAccount = mAccountShopping;
+            mModifiedAccountButton = mShoppingButton;
+            mModifiedAccountAdapter = mShoppingTransactionListAdapter;
+
+            // initialize and show the dialog
             String transactionString = TransactionCategory.SHOPPING.toString();
             AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
                     transactionString, mMainAccount.getCurrency().toString());
@@ -865,6 +947,12 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         }
         else if(view.getId() == R.id.category_food_button)
         {
+            // retain the views to refresh later
+            mModifiedAccount = mAccountFood;
+            mModifiedAccountButton = mFoodButton;
+            mModifiedAccountAdapter = mFoodTransactionListAdapter;
+
+            // initialize and show the dialog
             String transactionString = TransactionCategory.FOOD.toString();
             AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
                     transactionString, mMainAccount.getCurrency().toString());
@@ -872,6 +960,12 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         }
         else if(view.getId() == R.id.category_groceries_button)
         {
+            // retain the views to refresh later
+            mModifiedAccount = mAccountGroceries;
+            mModifiedAccountButton = mGroceriesButton;
+            mModifiedAccountAdapter = mGroceriesTransactionListAdapter;
+
+            // initialize and show the dialog
             String transactionString = TransactionCategory.GROCERIES.toString();
             AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
                     transactionString, mMainAccount.getCurrency().toString());
@@ -879,6 +973,12 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         }
         else if(view.getId() == R.id.category_care_button)
         {
+            // retain the views to refresh later
+            mModifiedAccount = mAccountPersonalCare;
+            mModifiedAccountButton = mCareButton;
+            mModifiedAccountAdapter = mCareTransactionListAdapter;
+
+            // initialize and show the dialog
             String transactionString = TransactionCategory.CARE.toString();
             AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
                     transactionString, mMainAccount.getCurrency().toString());
@@ -886,6 +986,12 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         }
         else if(view.getId() == R.id.category_sports_button)
         {
+            // retain the views to refresh later
+            mModifiedAccount = mAccountSports;
+            mModifiedAccountButton = mSportsButton;
+            mModifiedAccountAdapter = mSportsTransactionListAdapter;
+
+            // initialize and show the dialog
             String transactionString = TransactionCategory.SPORTS.toString();
             AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
                     transactionString, mMainAccount.getCurrency().toString());
@@ -893,6 +999,12 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         }
         else if(view.getId() == R.id.category_health_button)
         {
+            // retain the views to refresh later
+            mModifiedAccount = mAccountHealth;
+            mModifiedAccountButton = mHealthButton;
+            mModifiedAccountAdapter = mHealthTransactionListAdapter;
+
+            // initialize and show the dialog
             String transactionString = TransactionCategory.HEALTH.toString();
             AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
                     transactionString, mMainAccount.getCurrency().toString());
@@ -900,6 +1012,12 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         }
         else if(view.getId() == R.id.category_pets_button)
         {
+            // retain the views to refresh later
+            mModifiedAccount = mAccountPets;
+            mModifiedAccountButton = mPetsButton;
+            mModifiedAccountAdapter = mPetsTransactionListAdapter;
+
+            // initialize and show the dialog
             String transactionString = TransactionCategory.PETS.toString();
             AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
                     transactionString, mMainAccount.getCurrency().toString());
@@ -907,6 +1025,12 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         }
         else if(view.getId() == R.id.category_travel_button)
         {
+            // retain the views to refresh later
+            mModifiedAccount = mAccountTravel;
+            mModifiedAccountButton = mTravelButton;
+            mModifiedAccountAdapter = mTravelTransactionListAdapter;
+
+            // initialize and show the dialog
             String transactionString = TransactionCategory.TRAVEL.toString();
             AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
                     transactionString, mMainAccount.getCurrency().toString());
@@ -914,18 +1038,24 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         }
         else if(view.getId() == R.id.category_other_button)
         {
+            // retain the views to refresh later
+            mModifiedAccount = mAccountOther;
+            mModifiedAccountButton = mOtherButton;
+            mModifiedAccountAdapter = mOtherTransactionListAdapter;
+
+            // initialize and show the dialog
             String transactionString = TransactionCategory.OTHER.toString();
             AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
                     transactionString, mMainAccount.getCurrency().toString());
             dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
         }
-        else if(view.getId() == R.id.category_none_button)
-        {
-            String transactionString = TransactionCategory.NONE.toString();
-            AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
-                    transactionString, mMainAccount.getCurrency().toString());
-            dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
-        }
+//        else if(view.getId() == R.id.category_none_button)
+//        {
+//            String transactionString = TransactionCategory.NONE.toString();
+//            AddTransactionDialogFragment dialog = AddTransactionDialogFragment.newInstance("New " + transactionString + " transaction", TransactionType.WITHDRAWAL.toString(),
+//                    transactionString, mMainAccount.getCurrency().toString());
+//            dialog.show(getFragmentManager(), AddTransactionDialogFragment.class.getName());
+//        }
     }
 
     // handling clicking the category transaction list buttons
@@ -1045,6 +1175,7 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
             e.printStackTrace();
         }
 
+        // refresh entire page to fit the new view
         populatePageViews(mFromDate, mToDate);
     }
 
@@ -1073,10 +1204,25 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
     // =============================================================================================================================================================
 
     @Override
-    public void onAddClick(AddTransactionDialogFragment dialog)
+    public void onAddTransactionClick(AddTransactionDialogFragment dialog)
     {
         mMainAccount.applyTransaction(dialog.getTransaction());
-        populatePageViews(mFromDate, mToDate);
+        mModifiedAccount.applyTransaction(dialog.getTransaction());
+        mModifiedAccountButton.setVisibility(View.VISIBLE);
+
+        mModifiedAccountAdapter.updateDataWith(mModifiedAccount.getTransactions());
+        mModifiedAccountAdapter.notifyItemInserted(mModifiedAccount.getTransactions().size());
+
+        if(dialog.getTransaction().getType() == TransactionType.DEPOSIT)
+            setupIncomeChartEntries();
+        else
+            setupSpendingChartEntries();
+
+        mPagerAdapter = new MainChartsFragmentPagerAdapter(getSupportFragmentManager(), mSpendingEntries, mSpendingColors, mIncomeEntries, mIncomeColors);
+        mViewPager.setAdapter(mPagerAdapter);
+        mMainChartsTabs.setupWithViewPager(mViewPager);
+        mMainChartsTabs.getTabAt(0).setText(getResources().getString(R.string.spending_title));
+        mMainChartsTabs.getTabAt(1).setText(getResources().getString(R.string.income_title));
     }
 
     // =============================================================================================================================================================

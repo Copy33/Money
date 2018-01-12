@@ -26,6 +26,7 @@
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -230,13 +231,13 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/category_none_button"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:backgroundTint="@color/black"
-                android:drawableStart="@drawable/ic_alert_circle_outline_white_24dp"
-                android:onClick="onCategoryButtonClick"/>
+            <!--<Button-->
+            <!--android:id="@+id/category_none_button"-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:backgroundTint="@color/black"-->
+            <!--android:drawableStart="@drawable/ic_alert_circle_outline_white_24dp"-->
+            <!--android:onClick="onCategoryButtonClick"/>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -257,12 +258,12 @@
                 android:textColor="@android:color/white"
                 />
 
-            <TextView
-                android:id="@+id/category_rent_text_view"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/category_rent_transaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                />
+                android:nestedScrollingEnabled="false">
+            </android.support.v7.widget.RecyclerView>
 
             <Button
                 android:id="@+id/category_transport_button_list"
@@ -276,12 +277,12 @@
                 android:textColor="@android:color/white"
                 />
 
-            <TextView
-                android:id="@+id/category_transport_text_view"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/category_transport_transaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                />
+                android:nestedScrollingEnabled="false">
+            </android.support.v7.widget.RecyclerView>
 
             <Button
                 android:id="@+id/category_bills_button_list"
@@ -295,12 +296,12 @@
                 android:textColor="@android:color/white"
                 />
 
-            <TextView
-                android:id="@+id/category_bills_text_view"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/category_bills_transaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                />
+                android:nestedScrollingEnabled="false">
+            </android.support.v7.widget.RecyclerView>
 
             <Button
                 android:id="@+id/category_entertainment_button_list"
@@ -314,12 +315,12 @@
                 android:textColor="@android:color/white"
                 />
 
-            <TextView
-                android:id="@+id/category_entertainment_text_view"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/category_entertainment_transaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                />
+                android:nestedScrollingEnabled="false">
+            </android.support.v7.widget.RecyclerView>
 
             <Button
                 android:id="@+id/category_transfer_out_button_list"
@@ -333,12 +334,12 @@
                 android:textColor="@android:color/white"
                 />
 
-            <TextView
-                android:id="@+id/category_transfer_out_text_view"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/category_transfer_out_transaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                />
+                android:nestedScrollingEnabled="false">
+            </android.support.v7.widget.RecyclerView>
 
             <Button
                 android:id="@+id/category_shopping_button_list"
@@ -352,12 +353,12 @@
                 android:textColor="@android:color/white"
                 />
 
-            <TextView
-                android:id="@+id/category_shopping_text_view"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/category_shopping_transaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                />
+                android:nestedScrollingEnabled="false">
+            </android.support.v7.widget.RecyclerView>
 
             <Button
                 android:id="@+id/category_food_button_list"
@@ -371,12 +372,12 @@
                 android:textColor="@android:color/white"
                 />
 
-            <TextView
-                android:id="@+id/category_food_text_view"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/category_food_transaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                />
+                android:nestedScrollingEnabled="false">
+            </android.support.v7.widget.RecyclerView>
 
             <Button
                 android:id="@+id/category_groceries_button_list"
@@ -390,12 +391,12 @@
                 android:textColor="@android:color/white"
                 />
 
-            <TextView
-                android:id="@+id/category_groceries_text_view"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/category_groceries_transaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                />
+                android:nestedScrollingEnabled="false">
+            </android.support.v7.widget.RecyclerView>
 
             <Button
                 android:id="@+id/category_care_button_list"
@@ -409,12 +410,12 @@
                 android:textColor="@android:color/white"
                 />
 
-            <TextView
-                android:id="@+id/category_care_text_view"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/category_care_transaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                />
+                android:nestedScrollingEnabled="false">
+            </android.support.v7.widget.RecyclerView>
 
             <Button
                 android:id="@+id/category_sports_button_list"
@@ -428,12 +429,12 @@
                 android:textColor="@android:color/white"
                 />
 
-            <TextView
-                android:id="@+id/category_sports_text_view"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/category_sports_transaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                />
+                android:nestedScrollingEnabled="false">
+            </android.support.v7.widget.RecyclerView>
 
             <Button
                 android:id="@+id/category_health_button_list"
@@ -447,12 +448,12 @@
                 android:textColor="@android:color/white"
                 />
 
-            <TextView
-                android:id="@+id/category_health_text_view"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/category_health_transaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                />
+                android:nestedScrollingEnabled="false">
+            </android.support.v7.widget.RecyclerView>
 
             <Button
                 android:id="@+id/category_pets_button_list"
@@ -466,12 +467,12 @@
                 android:textColor="@android:color/white"
                 />
 
-            <TextView
-                android:id="@+id/category_pets_text_view"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/category_pets_transaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                />
+                android:nestedScrollingEnabled="false">
+            </android.support.v7.widget.RecyclerView>
 
             <Button
                 android:id="@+id/category_travel_button_list"
@@ -485,12 +486,12 @@
                 android:textColor="@android:color/white"
                 />
 
-            <TextView
-                android:id="@+id/category_travel_text_view"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/category_travel_transaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                />
+                android:nestedScrollingEnabled="false">
+            </android.support.v7.widget.RecyclerView>
 
             <Button
                 android:id="@+id/category_other_button_list"
@@ -504,12 +505,12 @@
                 android:textColor="@android:color/white"
                 />
 
-            <TextView
-                android:id="@+id/category_other_text_view"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/category_other_transaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                />
+                android:nestedScrollingEnabled="false">
+            </android.support.v7.widget.RecyclerView>
 
             <Button
                 android:id="@+id/category_none_button_list"
@@ -523,13 +524,12 @@
                 android:textColor="@android:color/white"
                 />
 
-            <TextView
-                android:id="@+id/category_none_text_view"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/category_none_transaction_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                />
-
+                android:nestedScrollingEnabled="false">
+            </android.support.v7.widget.RecyclerView>
 
             <!-- ==================== THIS IS FOR LATER ==================== -->
             <LinearLayout

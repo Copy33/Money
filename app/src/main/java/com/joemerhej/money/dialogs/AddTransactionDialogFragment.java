@@ -8,16 +8,13 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.joemerhej.money.R;
 import com.joemerhej.money.account.Currency;
 import com.joemerhej.money.transaction.Transaction;
-import com.joemerhej.money.transaction.TransactionCategory;
 import com.joemerhej.money.transaction.TransactionType;
 
 import java.math.BigDecimal;
@@ -25,7 +22,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.IllegalFormatException;
 import java.util.Locale;
 
 /**
@@ -47,7 +43,7 @@ public class AddTransactionDialogFragment extends DialogFragment
 
     public interface AddTransactionDialogListener
     {
-        void onAddClick(AddTransactionDialogFragment dialog);
+        void onAddTransactionClick(AddTransactionDialogFragment dialog);
     }
 
 
@@ -131,7 +127,7 @@ public class AddTransactionDialogFragment extends DialogFragment
                            e.printStackTrace();
                        }
 
-                       mListener.onAddClick(AddTransactionDialogFragment.this);
+                       mListener.onAddTransactionClick(AddTransactionDialogFragment.this);
                    }
                })
                .setNegativeButton("Cancel", new DialogInterface.OnClickListener()
