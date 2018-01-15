@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
 
     // general
     private static final int SMS_PERMISSION_CODE = 0;
-    private static boolean MOCK = true;
+    private static boolean MOCK = false;
 
     // =============================================================================================
     // PROTOTYPE SECTION
@@ -273,9 +273,6 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         // will populate mFromDate and mToDate based on preference view in shared preferences
         setFromAndToDatesBasedOnDateRangePreference(mDateRangePreference);
 
-        // populate page views based on date range in shared prefs
-        populatePageViews(mFromDate, mToDate);
-
         mRentTransactionListAdapter = new TransactionListAdapter(mAccountRent.getTransactions());
         mTransferOutTransactionListAdapter = new TransactionListAdapter(mAccountTransferOut.getTransactions());
         mTransportTransactionListAdapter = new TransactionListAdapter(mAccountTransport.getTransactions());
@@ -339,6 +336,9 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         mPetsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mOtherRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mNoneRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // populate page views based on date range in shared prefs
+        populatePageViews(mFromDate, mToDate);
     }
 
     private void populatePageViews(Date fromDate, Date toDate)
@@ -389,7 +389,7 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         // set the views
         mDayTextView.setText("from " + DATE_FORMAT.format(fromDate) + " to " + DATE_FORMAT.format(toDate));
 
-        if(!MOCK)
+        if(!MOCK && hasReadSmsPermission())
         {
             mMainAccount.clear(); // after the to do below we should remove this
 
@@ -423,6 +423,38 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
 
         // match transfers to eliminate transfers within account
         matchTransfers();
+
+        mRentTransactionListAdapter.updateDataWith(mAccountRent.getTransactions());
+        mTransferOutTransactionListAdapter.updateDataWith(mAccountTransferOut.getTransactions());
+        mTransportTransactionListAdapter.updateDataWith(mAccountTransport.getTransactions());
+        mEntertainmentTransactionListAdapter.updateDataWith(mAccountEntertainment.getTransactions());
+        mFoodTransactionListAdapter.updateDataWith(mAccountFood.getTransactions());
+        mBillsTransactionListAdapter.updateDataWith(mAccountBills.getTransactions());
+        mTravelTransactionListAdapter.updateDataWith(mAccountTravel.getTransactions());
+        mShoppingTransactionListAdapter.updateDataWith(mAccountShopping.getTransactions());
+        mGroceriesTransactionListAdapter.updateDataWith(mAccountGroceries.getTransactions());
+        mCareTransactionListAdapter.updateDataWith(mAccountPersonalCare.getTransactions());
+        mSportsTransactionListAdapter.updateDataWith(mAccountSports.getTransactions());
+        mHealthTransactionListAdapter.updateDataWith(mAccountHealth.getTransactions());
+        mPetsTransactionListAdapter.updateDataWith(mAccountPets.getTransactions());
+        mOtherTransactionListAdapter.updateDataWith(mAccountOther.getTransactions());
+        mNoneTransactionListAdapter.updateDataWith(mAccountNone.getTransactions());
+
+        mRentTransactionListAdapter.notifyDataSetChanged();
+        mTransferOutTransactionListAdapter.notifyDataSetChanged();
+        mTransportTransactionListAdapter.notifyDataSetChanged();
+        mEntertainmentTransactionListAdapter.notifyDataSetChanged();
+        mFoodTransactionListAdapter.notifyDataSetChanged();
+        mBillsTransactionListAdapter.notifyDataSetChanged();
+        mTravelTransactionListAdapter.notifyDataSetChanged();
+        mShoppingTransactionListAdapter.notifyDataSetChanged();
+        mGroceriesTransactionListAdapter.notifyDataSetChanged();
+        mCareTransactionListAdapter.notifyDataSetChanged();
+        mSportsTransactionListAdapter.notifyDataSetChanged();
+        mHealthTransactionListAdapter.notifyDataSetChanged();
+        mPetsTransactionListAdapter.notifyDataSetChanged();
+        mOtherTransactionListAdapter.notifyDataSetChanged();
+        mNoneTransactionListAdapter.notifyDataSetChanged();
 
         // set up pie charts
         setupSpendingChartEntries();
@@ -507,131 +539,94 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
 
     private void populateCategoriesViews()
     {
-        String noneTextView = "";
-        String salaryTextView = "";
-        String transferInTextView = "";
-        String cashTextView = "";
-        String transferOutTextView = "";
-        String rentTextView = "";
-        String transportTextView = "";
-        String entertainmentTextView = "";
-        String foodTextView = "";
-        String billsTextView = "";
-        String travelTextView = "";
-        String shoppingTextView = "";
-        String groceriesTextView = "";
-        String careTextView = "";
-        String sportsTextView = "";
-        String healthTextView = "";
-        String petsTextView = "";
-        String otherTextView = "";
-
         for(Transaction t : mMainAccount.getTransactions())
         {
             if(t.getCategory().compareTo(TransactionCategory.NONE.toString()) == 0)
             {
                 mAccountNone.applyTransaction(t);
                 mNoneButton.setVisibility(View.VISIBLE);
-                continue;
             }
             // TODO: finish the next 3
-            if(t.getCategory().compareTo(TransactionCategory.SALARY.toString()) == 0)
+            else if(t.getCategory().compareTo(TransactionCategory.SALARY.toString()) == 0)
             {
                 mAccountSalary.applyTransaction(t);
-                continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.TRANSFER_IN.toString()) == 0)
+            else if(t.getCategory().compareTo(TransactionCategory.TRANSFER_IN.toString()) == 0)
             {
                 mAccountTransferIn.applyTransaction(t);
-                continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.CASH.toString()) == 0)
+            else if(t.getCategory().compareTo(TransactionCategory.CASH.toString()) == 0)
             {
                 mAccountCash.applyTransaction(t);
-                continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.TRANSFER_OUT.toString()) == 0)
+            else if(t.getCategory().compareTo(TransactionCategory.TRANSFER_OUT.toString()) == 0)
             {
                 mAccountTransferOut.applyTransaction(t);
                 mTransferOutButton.setVisibility(View.VISIBLE);
-                continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.RENT.toString()) == 0)
+            else if(t.getCategory().compareTo(TransactionCategory.RENT.toString()) == 0)
             {
                 mAccountRent.applyTransaction(t);
                 mRentButton.setVisibility(View.VISIBLE);
-                continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.BILLS.toString()) == 0)
+            else if(t.getCategory().compareTo(TransactionCategory.BILLS.toString()) == 0)
             {
                 mAccountBills.applyTransaction(t);
                 mBillsButton.setVisibility(View.VISIBLE);
-                continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.GROCERIES.toString()) == 0)
+            else if(t.getCategory().compareTo(TransactionCategory.GROCERIES.toString()) == 0)
             {
                 mAccountGroceries.applyTransaction(t);
                 mGroceriesButton.setVisibility(View.VISIBLE);
-                continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.FOOD.toString()) == 0)
+            else if(t.getCategory().compareTo(TransactionCategory.FOOD.toString()) == 0)
             {
                 mAccountFood.applyTransaction(t);
                 mFoodButton.setVisibility(View.VISIBLE);
-                continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.ENTERTAINMENT.toString()) == 0)
+            else if(t.getCategory().compareTo(TransactionCategory.ENTERTAINMENT.toString()) == 0)
             {
                 mAccountEntertainment.applyTransaction(t);
                 mEntertainmentButton.setVisibility(View.VISIBLE);
-                continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.TRANSPORT.toString()) == 0)
+            else if(t.getCategory().compareTo(TransactionCategory.TRANSPORT.toString()) == 0)
             {
                 mAccountTransport.applyTransaction(t);
                 mTransportButton.setVisibility(View.VISIBLE);
-                continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.SPORTS.toString()) == 0)
+            else if(t.getCategory().compareTo(TransactionCategory.SPORTS.toString()) == 0)
             {
                 mAccountSports.applyTransaction(t);
-                continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.SHOPPING.toString()) == 0)
+            else if(t.getCategory().compareTo(TransactionCategory.SHOPPING.toString()) == 0)
             {
                 mAccountShopping.applyTransaction(t);
                 mShoppingButton.setVisibility(View.VISIBLE);
-                continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.HEALTH.toString()) == 0)
+            else if(t.getCategory().compareTo(TransactionCategory.HEALTH.toString()) == 0)
             {
                 mAccountHealth.applyTransaction(t);
                 mHealthButton.setVisibility(View.VISIBLE);
-                continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.TRAVEL.toString()) == 0)
+            else if(t.getCategory().compareTo(TransactionCategory.TRAVEL.toString()) == 0)
             {
                 mAccountTravel.applyTransaction(t);
                 mTravelButton.setVisibility(View.VISIBLE);
-                continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.PETS.toString()) == 0)
+            else if(t.getCategory().compareTo(TransactionCategory.PETS.toString()) == 0)
             {
                 mAccountPets.applyTransaction(t);
                 mPetsButton.setVisibility(View.VISIBLE);
-                continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.CARE.toString()) == 0)
+            else if(t.getCategory().compareTo(TransactionCategory.CARE.toString()) == 0)
             {
                 mAccountPersonalCare.applyTransaction(t);
                 mCareButton.setVisibility(View.VISIBLE);
-                continue;
             }
-            if(t.getCategory().compareTo(TransactionCategory.OTHER.toString()) == 0)
+            else if(t.getCategory().compareTo(TransactionCategory.OTHER.toString()) == 0)
             {
                 mAccountOther.applyTransaction(t);
                 mOtherButton.setVisibility(View.VISIBLE);
-                continue;
             }
         }
     }
@@ -816,7 +811,8 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
     {
         super.onResume();
 
-        populatePageViews(mFromDate, mToDate);
+        //TODO: figure out what to do here.
+        //populatePageViews(mFromDate, mToDate);
     }
 
     // =============================================================================================================================================================
