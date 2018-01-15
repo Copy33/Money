@@ -40,6 +40,12 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
         this.mTransactionsList = transactionsList;
     }
 
+    // method to get a transaction based on view position
+    public Transaction getTransaction(int position)
+    {
+        return mTransactionsList.get(position);
+    }
+
     // setter for the click listener
     public void setOnTransactionClickListener(final TransactionClickListener onClickListener)
     {

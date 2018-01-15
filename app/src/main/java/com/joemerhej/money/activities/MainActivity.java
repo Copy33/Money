@@ -182,17 +182,6 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
     private Button mModifiedAccountButton;
     private TransactionListAdapter mModifiedAccountAdapter;
 
-    // listeners : transaction item click
-    private TransactionListAdapter.TransactionClickListener mTransactionClickListener = new TransactionListAdapter.TransactionClickListener()
-    {
-        @Override
-        public void onTransactionClick(View view, int position)
-        {
-            // TODO: this does nothing for now.
-            Log.d(TAG, "Clicked item # " + position);
-        }
-    };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -863,6 +852,17 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
     // =============================================================================================================================================================
     // CLICK LISTENERS (from xml)
     // =============================================================================================================================================================
+
+    // transaction item click
+    private TransactionListAdapter.TransactionClickListener mTransactionClickListener = new TransactionListAdapter.TransactionClickListener()
+    {
+        @Override
+        public void onTransactionClick(View view, int position)
+        {
+            // TODO: this does nothing for now.
+            Log.d(TAG, "Clicked item # " + position);
+        }
+    };
 
     // clicking category buttons will add transactions manually
     public void onCategoryButtonClick(View view)
