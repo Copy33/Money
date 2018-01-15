@@ -67,6 +67,12 @@ public class Account
         mTransactions.add(transaction);
     }
 
+    public void applyTransactions(final List<Transaction> transactions)
+    {
+        for(Transaction t : transactions)
+            applyTransaction(t);
+    }
+
     public void removeTransaction(Transaction transaction)
     {
         if(transaction == null)

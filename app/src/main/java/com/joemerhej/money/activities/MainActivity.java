@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
 
     // data : accounts
     private Account mMainAccount = new Account();
+    private Account mManualTransactionsAccount = new Account();
 
     private Account mAccountSalary = new Account();
     private Account mAccountTransferIn = new Account();
@@ -417,6 +418,15 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
 
         // set up main account balance
         mAccountBalanceTextView.setText(NumberFormat.getNumberInstance(Locale.US).format(mMainAccount.getBalance().intValue()) + " " + mMainAccount.getCurrency().toString());
+
+        // fill in the manual transactions
+        for(Transaction t : mManualTransactionsAccount.getTransactions())
+        {
+            Date date = t.getDate();
+
+            if(date.compareTo(fromDate) >= 0 && date.compareTo(toDate) < 0)
+                mMainAccount.applyTransaction(t);
+        }
 
         // fill in the transactions by category
         populateCategoriesViews();
@@ -1202,14 +1212,17 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
     @Override
     public void onAddTransactionClick(AddTransactionDialogFragment dialog)
     {
-        mMainAccount.applyTransaction(dialog.getTransaction());
-        mModifiedAccount.applyTransaction(dialog.getTransaction());
+        Transaction newTransaction = dialog.getTransaction();
+
+        mManualTransactionsAccount.applyTransaction(newTransaction);
+        mMainAccount.applyTransaction(newTransaction);
+        mModifiedAccount.applyTransaction(newTransaction);
         mModifiedAccountButton.setVisibility(View.VISIBLE);
 
         mModifiedAccountAdapter.updateDataWith(mModifiedAccount.getTransactions());
         mModifiedAccountAdapter.notifyItemInserted(mModifiedAccount.getTransactions().size());
 
-        if(dialog.getTransaction().getType() == TransactionType.DEPOSIT)
+        if(newTransaction.getType() == TransactionType.DEPOSIT)
             setupIncomeChartEntries();
         else
             setupSpendingChartEntries();
