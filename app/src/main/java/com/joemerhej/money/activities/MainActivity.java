@@ -822,7 +822,7 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
         super.onResume();
 
         //TODO: figure out what to do here.
-        //populatePageViews(mFromDate, mToDate);
+        populatePageViews(mFromDate, mToDate);
     }
 
     // =============================================================================================================================================================
