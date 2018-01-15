@@ -80,18 +80,23 @@ public class TransactionCategorizer
         mCategoryMap.put("burger", TransactionCategory.FOOD.toString());
         mCategoryMap.put("pasta", TransactionCategory.FOOD.toString());
         mCategoryMap.put("cafe", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("bistro", TransactionCategory.FOOD.toString());
+        mCategoryMap.put("wakame", TransactionCategory.FOOD.toString());
 
         mCategoryMap.put("club", TransactionCategory.ENTERTAINMENT.toString());
         mCategoryMap.put("hotel", TransactionCategory.ENTERTAINMENT.toString());
         mCategoryMap.put("drink", TransactionCategory.ENTERTAINMENT.toString());
         mCategoryMap.put("beverage", TransactionCategory.ENTERTAINMENT.toString());
         mCategoryMap.put("jetty", TransactionCategory.ENTERTAINMENT.toString());
+        mCategoryMap.put("autodrome", TransactionCategory.ENTERTAINMENT.toString());
 
         mCategoryMap.put("taxi", TransactionCategory.TRANSPORT.toString());
         mCategoryMap.put("uber", TransactionCategory.TRANSPORT.toString());
         mCategoryMap.put("careem", TransactionCategory.TRANSPORT.toString());
         mCategoryMap.put("metro", TransactionCategory.TRANSPORT.toString());
         mCategoryMap.put("rta", TransactionCategory.TRANSPORT.toString());
+        mCategoryMap.put("auto", TransactionCategory.TRANSPORT.toString());
+        mCategoryMap.put("nabooda", TransactionCategory.TRANSPORT.toString());
 
         mCategoryMap.put("sport", TransactionCategory.SPORTS.toString());
         mCategoryMap.put("sports", TransactionCategory.SPORTS.toString());
@@ -112,6 +117,7 @@ public class TransactionCategorizer
         mCategoryMap.put("nike", TransactionCategory.SHOPPING.toString());
         mCategoryMap.put("adidas", TransactionCategory.SHOPPING.toString());
         mCategoryMap.put("retail", TransactionCategory.SHOPPING.toString());
+        mCategoryMap.put("zara", TransactionCategory.SHOPPING.toString());
 
         mCategoryMap.put("health", TransactionCategory.HEALTH.toString());
         mCategoryMap.put("hospital", TransactionCategory.HEALTH.toString());
@@ -135,6 +141,7 @@ public class TransactionCategorizer
 
         mCategoryMap.put("government", TransactionCategory.OTHER.toString());
         mCategoryMap.put("belhasa", TransactionCategory.OTHER.toString());
+        mCategoryMap.put("entertainer", TransactionCategory.OTHER.toString());
     }
 
     public String getCategoryFromString(String text)
