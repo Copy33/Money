@@ -1086,8 +1086,8 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
                     }
                     else if(view.getId() == R.id.current_date_button)
                     {
-                        mFromDate = mOriginalFromDate;
-                        mToDate = mOriginalToDate;
+                        mFromDate.setTime(mOriginalFromDate.getTime());
+                        mToDate.setTime(mOriginalToDate.getTime());
                     }
                     else if(view.getId() == R.id.next_date_button)
                     {
@@ -1100,7 +1100,7 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
                 case "Week":
                     if(view.getId() == R.id.previous_date_button)
                     {
-                        mToDate = mFromDate;
+                        mToDate.setTime(mFromDate.getTime());
 
                         cal.setTime(mFromDate);
                         cal.add(Calendar.WEEK_OF_YEAR, -1);
@@ -1108,12 +1108,12 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
                     }
                     else if(view.getId() == R.id.current_date_button)
                     {
-                        mFromDate = mOriginalFromDate;
-                        mToDate = mOriginalToDate;
+                        mFromDate.setTime(mOriginalFromDate.getTime());
+                        mToDate.setTime(mOriginalToDate.getTime());
                     }
                     else if(view.getId() == R.id.next_date_button)
                     {
-                        mFromDate = mToDate;
+                        mFromDate.setTime(mToDate.getTime());
 
                         cal.setTime(mToDate);
                         cal.add(Calendar.WEEK_OF_YEAR, +1);
@@ -1125,7 +1125,7 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
                 case "Month":
                     if(view.getId() == R.id.previous_date_button)
                     {
-                        mToDate = mFromDate;
+                        mToDate.setTime(mFromDate.getTime());
 
                         cal.setTime(mFromDate);
                         cal.add(Calendar.MONTH, -1);
@@ -1133,12 +1133,12 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
                     }
                     else if(view.getId() == R.id.current_date_button)
                     {
-                        mFromDate = mOriginalFromDate;
-                        mToDate = mOriginalToDate;
+                        mFromDate.setTime(mOriginalFromDate.getTime());
+                        mToDate.setTime(mOriginalToDate.getTime());
                     }
                     else if(view.getId() == R.id.next_date_button)
                     {
-                        mFromDate = mToDate;
+                        mFromDate.setTime(mToDate.getTime());
 
                         cal.setTime(mToDate);
                         cal.add(Calendar.MONTH, +1);
@@ -1150,7 +1150,7 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
                 case "Year":
                     if(view.getId() == R.id.previous_date_button)
                     {
-                        mToDate = mFromDate;
+                        mToDate.setTime(mFromDate.getTime());
 
                         cal.setTime(mFromDate);
                         cal.add(Calendar.YEAR, -1);
@@ -1158,12 +1158,12 @@ public class MainActivity extends AppCompatActivity implements Observer, DateRan
                     }
                     else if(view.getId() == R.id.current_date_button)
                     {
-                        mFromDate = mOriginalFromDate;
-                        mToDate = mOriginalToDate;
+                        mFromDate.setTime(mOriginalFromDate.getTime());
+                        mToDate.setTime(mOriginalToDate.getTime());
                     }
                     else if(view.getId() == R.id.next_date_button)
                     {
-                        mFromDate = mToDate;
+                        mFromDate.setTime(mToDate.getTime());
 
                         cal.setTime(mToDate);
                         cal.add(Calendar.YEAR, +1);
